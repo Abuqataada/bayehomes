@@ -48,8 +48,8 @@ def create_app():
     app.register_blueprint(property_mgmt_bp)
     
     # Create upload folders
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    os.makedirs(app.config['BLOG_UPLOAD_FOLDER'], exist_ok=True)
+    #os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    #os.makedirs(app.config['BLOG_UPLOAD_FOLDER'], exist_ok=True)
     
     return app
 
