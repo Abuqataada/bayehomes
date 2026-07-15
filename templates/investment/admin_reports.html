@@ -1,0 +1,83 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Investment Reports – Admin – Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">Investment Reports</h4>
+        <div class="text-muted small">Summary and package breakdown</div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4 col-6">
+            <div class="card bg-primary text-white border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ total_invested }}</h3>
+                    <p class="mb-0 small">Total Invested</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-6">
+            <div class="card bg-success text-white border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-coins fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ total_roi_earned }}</h3>
+                    <p class="mb-0 small">Total ROI Earned</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-semibold">Active</div>
+                            <div class="fs-4 fw-bold">{{ active_investments }}</div>
+                        </div>
+                        <div>
+                            <div class="fw-semibold text-muted">Completed</div>
+                            <div class="fs-4 fw-bold">{{ completed_investments }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Package stats -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <h6 class="fw-semibold mb-3">Investments by Package</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Package</th>
+                            <th>Count</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ps in package_stats %}
+                            <tr>
+                                <td class="fw-semibold">{{ ps.name }}</td>
+                                <td>{{ ps.count }}</td>
+                                <td>{{ ps.total_amount }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-5">No package stats available.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+

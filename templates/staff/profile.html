@@ -1,0 +1,54 @@
+{% if current_user.is_admin_user() %}
+  {% extends "admin/base_admin.html" %}
+{% else %}
+  {% extends "base_staff.html" %}
+{% endif %}
+
+{% block title %}Staff Profile{% endblock %} {%
+block content %}
+<h4 class="fw-bold mb-4">{{ staff.get_full_name() }}</h4>
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <p>
+          <strong>Staff ID:</strong> {{ staff.staff_profile.staff_id if
+          staff.staff_profile else 'Pending' }}
+        </p>
+        <p><strong>Email:</strong> {{ staff.email }}</p>
+        <p><strong>Phone:</strong> {{ staff.phone or '-' }}</p>
+        <p>
+          <strong>Role:</strong> {{ staff.staff_profile.role if
+          staff.staff_profile else '-' }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <h5 class="fw-bold">Allocated Properties</h5>
+        {% for property in properties %}
+        <div class="border-bottom py-2">
+          {{ property.title }} - {{ property.location }}
+        </div>
+        {% else %}
+        <p class="text-muted">No allocated properties.</p>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h5 class="fw-bold">Recent Reports</h5>
+        {% for report in reports %}
+        <div class="border-bottom py-2">
+          <strong>{{ report.report_date }}</strong>: {{ report.summary }}
+        </div>
+        {% else %}
+        <p class="text-muted">No reports.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

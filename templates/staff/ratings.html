@@ -1,0 +1,67 @@
+{% extends "admin/base_admin.html" %}
+
+
+{% block title %}Staff Ratings{% endblock %} {%
+block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold mb-0">Staff Ratings</h4>
+  <div>
+    <a
+      class="btn btn-outline-success btn-sm"
+      href="{{ url_for('staff.ratings', period='monthly') }}"
+      >Monthly</a
+    >
+    <a
+      class="btn btn-outline-success btn-sm"
+      href="{{ url_for('staff.ratings', period='yearly') }}"
+      >Yearly</a
+    >
+  </div>
+</div>
+<div class="card border-0 shadow-sm">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Staff</th>
+          <th>Attendance</th>
+          <th>Reports</th>
+          <th>Sales</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for staff, rating, attendance, reports_count, sales_count in rows %}
+        <tr>
+          <td>
+            {{ staff.get_full_name() }}<br /><small class="text-muted"
+              >{{ staff.staff_profile.staff_id if staff.staff_profile else ''
+              }}</small
+            >
+          </td>
+          <td>
+            {{ rating.attendance_score }}
+            <small class="text-muted">({{ attendance }} records)</small>
+          </td>
+          <td>
+            {{ rating.reporting_score }}
+            <small class="text-muted">({{ reports_count }} reports)</small>
+          </td>
+          <td>
+            {{ rating.sales_score }}
+            <small class="text-muted">({{ sales_count }} sales)</small>
+          </td>
+          <td><strong>{{ rating.total_score }}/100</strong></td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="text-center text-muted py-4">
+            No staff to rate.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

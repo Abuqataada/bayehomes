@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Blog – Baye Homes{% endblock %}
+
+{% block meta_description %}Baye Homes blog posts about verified properties, real estate investment, documents, and payment plans.{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="mb-4">
+        <h1 class="fw-bold">Blog</h1>
+        <p class="text-muted mb-0">News, guides, and updates from Baye Homes</p>
+    </div>
+
+    <div class="row g-4">
+        {% for post in posts.items %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    {% if post.image %}
+                        <img
+                            src="{{ url_for('static', filename='uploads/blog/' ~ post.image) }}"
+                            class="card-img-top"
+                            alt="{{ post.title }}"
+                            style="height: 180px; object-fit: cover;"
+                        >
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="fw-bold">{{ post.title }}</h5>
+                        <div class="text-muted small mb-2">
+                            {{ post.created_at.strftime('%Y-%m-%d') if post.created_at else '' }}
+                        </div>
+                        <p class="text-muted" style="display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+                            {{ post.excerpt or post.content|striptags|truncate(160, True, '…') }}
+                        </p>
+                        <a class="btn btn-success rounded-pill" href="{{ url_for('public.blog_detail', slug=post.slug) }}">
+                            Read more
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">No blog posts found.</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if posts.pages > 1 %}
+    <div class="d-flex justify-content-center mt-5">
+        <nav aria-label="Blog pagination">
+            <ul class="pagination">
+                {% if posts.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('public.blog', page=posts.prev_num) }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                {% endif %}
+
+                {% for page_num in posts.iter_pages() %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == posts.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('public.blog', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if posts.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('public.blog', page=posts.next_num) }}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
+

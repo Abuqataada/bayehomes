@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - Baye Homes{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-section text-white text-center d-flex align-items-center" style="background: linear-gradient(135deg, #0a2a24 0%, #1a4a3e 100%); min-height: 70vh; position: relative; overflow: hidden;">
+    <div class="container position-relative" style="z-index: 2;">
+        <h2 class="display-4 fw-bold mb-3" data-aos="fade-up" data-aos-duration="900">
+            More Than Real Estate, <br><span class="text-success">A Commitment to You</span>
+        </h2>
+        <a href="{{ url_for('public.properties') }}" class="btn btn-success btn-lg px-5 py-3 mt-3 rounded-pill" data-aos="fade-up" data-aos-duration="900" data-aos-delay="150">
+            Begin Your Investment Journey
+        </a>
+    </div>
+    <div class="hero-scroll-cue" style="z-index: 2;">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- Brand logos as horizontally auto‑scrolling cards (reuse index style) -->
+<section class="py-4 bg-white border-bottom" data-aos="fade-up">
+    <div class="container">
+        <div class="swiper brand-swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><div class="brand-card text-center p-3"><img src="{{ url_for('static', filename='images/beechwood.png') }}" alt="Beechwood" class="img-fluid" style="max-height: 70px;"></div></div>
+                <div class="swiper-slide"><div class="brand-card text-center p-3"><img src="{{ url_for('static', filename='images/gidan.png') }}" alt="Gidan" class="img-fluid" style="max-height: 70px;"></div></div>
+                <div class="swiper-slide"><div class="brand-card text-center p-3"><img src="{{ url_for('static', filename='images/nevada.png') }}" alt="Nevada" class="img-fluid" style="max-height: 70px;"></div></div>
+                <div class="swiper-slide"><div class="brand-card text-center p-3"><img src="{{ url_for('static', filename='images/hillcrestvilla.png') }}" alt="Hillcrest Villa" class="img-fluid" style="max-height: 70px;"></div></div>
+                <div class="swiper-slide"><div class="brand-card text-center p-3"><img src="{{ url_for('static', filename='images/ibiza.png') }}" alt="Ibiza" class="img-fluid" style="max-height: 70px;"></div></div>
+                <div class="swiper-slide"><div class="brand-card text-center p-3"><img src="{{ url_for('static', filename='images/newvilla.png') }}" alt="New Villa" class="img-fluid" style="max-height: 70px;"></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story / Mission / Vision / Core Values Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <img src="{{ url_for('static', filename='images/ambassador.jpg') }}" alt="Baye Homes Team" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="150">
+                <div class="accordion" id="aboutAccordion">
+                    <!-- Our Story -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-white text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStory">
+                                Our Story
+                            </button>
+                        </h2>
+                        <div id="collapseStory" class="accordion-collapse collapse show" data-bs-parent="#aboutAccordion">
+                            <div class="accordion-body text-muted">
+                                <p>Baye Homes was established in <strong>2024</strong> with a simple but powerful purpose: to make homeownership in Abuja accessible, secure, and rewarding for everyday people. We set out to empower <strong>middle-class families, civil servants, and small business owners</strong> by providing affordable real estate solutions rooted in transparency and trust.</p>
+                                <p>Our journey is guided by a clear vision: to become Abuja's most trusted real estate brand, creating inclusive, vibrant, and value-rich communities where aspirations turn into ownership.</p>
+                                <p>Every property we offer reflects our core values of affordability, transparency, and lasting security, because we believe investing in real estate should never feel out of reach.</p>
+                                <p>At Baye Homes, we don't just sell property — we build futures, one home at a time.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Mission -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-white text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMission">
+                                Mission
+                            </button>
+                        </h2>
+                        <div id="collapseMission" class="accordion-collapse collapse" data-bs-parent="#aboutAccordion">
+                            <div class="accordion-body text-muted">
+                                To empower middle-class families, civil servants, and small business owners with affordable, transparent, and community-driven real estate solutions, making homeownership in Abuja not only possible but profitable.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Vision -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-white text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVision">
+                                Vision
+                            </button>
+                        </h2>
+                        <div id="collapseVision" class="accordion-collapse collapse" data-bs-parent="#aboutAccordion">
+                            <div class="accordion-body text-muted">
+                                To become Abuja's most trusted real estate brand, bridging the gap between aspiration and ownership by creating inclusive, vibrant, and value-rich communities across the city and beyond.
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Core Values -->
+                    <div class="accordion-item border-0 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-white text-dark fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseValues">
+                                Core Values
+                            </button>
+                        </h2>
+                        <div id="collapseValues" class="accordion-collapse collapse" data-bs-parent="#aboutAccordion">
+                            <div class="accordion-body text-muted">
+                                <ul class="mb-0">
+                                    <li>Affordable Property Solution.</li>
+                                    <li>Transparent Transactions.</li>
+                                    <li>Secure ownership & Lasting value.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Meet The Team Slider -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-5 fw-bold">The People Who Make It Happen <br><span class="text-success">MEET THE TEAM</span></h2>
+            <p class="text-muted">Behind every successful investment is a trusted team — meet the people who make Baye Homes possible.</p>
+        </div>
+        <div class="swiper team-swiper">
+            <div class="swiper-wrapper">
+                <!-- Team Member 1 -->
+                <div class="swiper-slide">
+                    <div class="card h-100 border-0 shadow text-center p-4 hover-lift">
+                        <img src="{{ url_for('static', filename='images/ceo.png') }}" class="card-img-top rounded-circle mx-auto" alt="Zubeida Abdulrahman" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="fw-bold mt-3">Zubeida Abdulrahman</h5>
+                            <p class="text-muted">CEO/MD</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Team Member 2 -->
+                <div class="swiper-slide">
+                    <div class="card h-100 border-0 shadow text-center p-4 hover-lift">
+                        <img src="{{ url_for('static', filename='images/coo.png') }}" class="card-img-top rounded-circle mx-auto" alt="Joy Omamofe" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="fw-bold mt-3">Joy Omamofe</h5>
+                            <p class="text-muted">COO</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Team Member 3 -->
+                <div class="swiper-slide">
+                    <div class="card h-100 border-0 shadow text-center p-4 hover-lift">
+                        <img src="{{ url_for('static', filename='images/om.png') }}" class="card-img-top rounded-circle mx-auto" alt="Deborah Obieje" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="fw-bold mt-3">Deborah Obieje</h5>
+                            <p class="text-muted">Operations Manager</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Team Member 4 -->
+                <div class="swiper-slide">
+                    <div class="card h-100 border-0 shadow text-center p-4 hover-lift">
+                        <img src="{{ url_for('static', filename='images/ambassador.jpg') }}" class="card-img-top rounded-circle mx-auto" alt="Asema Zulehat" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="fw-bold mt-3">Asema Zulehat</h5>
+                            <p class="text-muted">Baye Homes Ambassador</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Why You Should Invest (Reuse from index) -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="text-uppercase small text-success fw-semibold">Deep thoughts</span>
+            <h2 class="display-5 fw-bold">Why You Should Invest</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="d-flex gap-3 mb-4 feature-item" data-aos="fade-up">
+                    <div class="flex-shrink-0"><i class="fas fa-chart-line fa-2x text-success"></i></div>
+                    <div><h5 class="fw-bold">Steady Value Appreciation</h5><p class="text-muted">Unlike many other investments, real estate consistently grows in value over time. With the right property in strategic locations like Abuja, you're guaranteed long-term returns.</p></div>
+                </div>
+                <div class="d-flex gap-3 mb-4 feature-item" data-aos="fade-up" data-aos-delay="150">
+                    <div class="flex-shrink-0"><i class="fas fa-shield-alt fa-2x text-success"></i></div>
+                    <div><h5 class="fw-bold">Tangible & Secure Asset</h5><p class="text-muted">Real estate is one of the few investments you can see, touch, and pass on as a legacy. Baye Homes secures your asset with verified documentation.</p></div>
+                </div>
+                <div class="d-flex gap-3 feature-item" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex-shrink-0"><i class="fas fa-coins fa-2x text-success"></i></div>
+                    <div><h5 class="fw-bold">Passive Income Opportunities</h5><p class="text-muted">Generate steady rental income or returns on resale. Baye Homes' consultancy helps you maximise potential effortlessly.</p></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex gap-3 mb-4 feature-item" data-aos="fade-up" data-aos-delay="75">
+                    <div class="flex-shrink-0"><i class="fas fa-chart-simple fa-2x text-success"></i></div>
+                    <div><h5 class="fw-bold">Protection Against Inflation</h5><p class="text-muted">As the cost of living rises, so does property value. Baye Homes identifies properties that hedge perfectly against inflation.</p></div>
+                </div>
+                <div class="d-flex gap-3 feature-item" data-aos="fade-up" data-aos-delay="225">
+                    <div class="flex-shrink-0"><i class="fas fa-hand-peace fa-2x text-success"></i></div>
+                    <div><h5 class="fw-bold">Flexibility & Control</h5><p class="text-muted">Outright purchase, installment plans, or tailor-made building solutions – Baye Homes gives you full control.</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Slider (Reuse from index) -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-5 fw-bold">Proof That <span class="text-success">Trust Pays Off</span></h2>
+            <p class="text-muted">From first-time buyers to seasoned investors, our clients share how Baye Homes turned their real estate goals into reality</p>
+        </div>
+        <div class="swiper testimonial-swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="card p-4 shadow-sm h-100">
+                        <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+                        <p>Owning land in Abuja always felt out of reach until I found Baye Homes. Their flexible payment plan made it possible for me to start small and grow. Today, I'm proud to say I'm a landowner in Kuje!</p>
+                        <div class="text-warning mb-2">★★★★★</div>
+                        <h6 class="mb-0">Chinonso A</h6>
+                        <small class="text-muted">Civil Servant</small>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="card p-4 shadow-sm h-100">
+                        <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+                        <p>My family wanted a secure and peaceful environment to build our home. Baye Homes gave us not just land, but peace of mind with all the documents provided.</p>
+                        <div class="text-warning mb-2">★★★★★</div>
+                        <h6 class="mb-0">Mrs. Bamidele</h6>
+                        <small class="text-muted">Business Owner</small>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="card p-4 shadow-sm h-100">
+                        <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+                        <p>I was looking for affordable investment opportunities in Abuja, and Baye Homes stood out. Transparent, reliable, and professional, their properties are already appreciating in value.</p>
+                        <div class="text-warning mb-2">★★★★★</div>
+                        <h6 class="mb-0">Emmanuel Oladele</h6>
+                        <small class="text-muted">Entrepreneur</small>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="card p-4 shadow-sm h-100">
+                        <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+                        <p>I bought in Nevada Phase 1, and when Phase 2 launched, I didn't hesitate. Baye Homes keeps their word, and I can see the growth happening around the estates.</p>
+                        <div class="text-warning mb-2">★★★★★</div>
+                        <h6 class="mb-0">John Oluwayomi Peter</h6>
+                        <small class="text-muted">Business Owner</small>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Accordion (Reuse from index) -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-5 fw-bold"><span class="text-success">Frequently</span> Asked Questions</h2>
+            <p class="text-muted">Find quick answers to the questions most clients ask before investing with Baye Homes.</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item mb-3 border-0 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                How safe is investing in real estate, especially in Abuja?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">Real estate in Abuja is one of the most secure and rewarding investments you can make, thanks to its consistent growth and demand. At Baye Homes, we take extra measures to ensure every property we offer is properly verified, documented, and free from disputes, giving you complete peace of mind.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-3 border-0 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How do you deal with property encroachment?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">Encroachment is a common concern in real estate, but at Baye Homes, we eliminate that risk by securing all lands with proper documentation, clear boundaries, and legal approvals. This ensures that every property you acquire remains fully protected and uncontested.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item mb-3 border-0 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Can I pay in installments?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">Yes, you can. Baye Homes makes property ownership flexible and affordable. With an initial deposit of just <strong>40%</strong>, you can spread the balance conveniently over <strong>4 months</strong>, making it easier to secure your dream property without financial strain.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-0 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                What documents do I receive after full payment?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">Once your payment is complete, we provide: Deed of Assignment, Building Plan, Building Permit, Certificate of Allocation, and Provisional Survey Plan.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Brand slider (reuse from index)
+    new Swiper('.brand-swiper', {
+        slidesPerView: 2,
+        spaceBetween: 20,
+        loop: true,
+        autoplay: { delay: 2000 },
+        breakpoints: { 640: { slidesPerView: 3 }, 768: { slidesPerView: 4 }, 1024: { slidesPerView: 5 } }
+    });
+    // Team slider
+    new Swiper('.team-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: { delay: 4000 },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.team-next', prevEl: '.team-prev' },
+        breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
+    });
+    // Testimonial slider (reuse from index)
+    new Swiper('.testimonial-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: { delay: 4000 },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.testimonial-next', prevEl: '.testimonial-prev' },
+        breakpoints: { 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
+    });
+</script>
+{% endblock %}
+

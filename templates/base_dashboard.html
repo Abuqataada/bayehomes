@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baye Homes – {% block title %}Dashboard{% endblock %}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Dashboard CSS (inlined for simplicity; you can move to a separate file) -->
+    <style>
+        :root {
+            --bh-green: #04AB5E;
+            --bh-sidebar-width: 260px;
+            --bh-topbar-height: 64px;
+        }
+
+        body {
+            padding-top: var(--bh-topbar-height);
+            background: #f4f6f9;
+            overflow-x: hidden;
+        }
+
+        /* Top Navbar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--bh-topbar-height);
+            background: #fff;
+            border-bottom: 1px solid #e9ecef;
+            z-index: 1050;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .topbar .brand {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--bh-green);
+            text-decoration: none;
+        }
+        .topbar .brand img {
+            height: 36px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--bh-topbar-height);
+            left: 0;
+            bottom: 0;
+            width: var(--bh-sidebar-width);
+            background: #fff;
+            border-right: 1px solid #e9ecef;
+            padding: 1.5rem 0;
+            overflow-y: auto;
+            z-index: 1040;
+            transition: transform 0.3s ease;
+        }
+        .sidebar .nav-link {
+            color: #495057;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .sidebar .nav-link:hover {
+            background: rgba(4, 171, 94, 0.08);
+            color: var(--bh-green);
+        }
+        .sidebar .nav-link.active {
+            background: var(--bh-green);
+            color: #fff;
+        }
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        .sidebar .nav-item .nav-link .badge {
+            float: right;
+        }
+        .sidebar .nav-section {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #adb5bd;
+            padding: 0.5rem 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: var(--bh-sidebar-width);
+            padding: 1.5rem;
+            min-height: calc(100vh - var(--bh-topbar-height));
+        }
+
+        /* Toggle button for mobile */
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #495057;
+            margin-right: 1rem;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* Avatar dropdown */
+        .avatar-dropdown .dropdown-toggle::after {
+            display: none;
+        }
+        .avatar-dropdown img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        /* Flash messages */
+        .alert-container {
+            position: fixed;
+            top: calc(var(--bh-topbar-height) + 10px);
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        /* Utilities */
+        .text-bh-green { color: var(--bh-green); }
+        .bg-bh-green { background: var(--bh-green); }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="topbar">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a href="{{ url_for('customer.dashboard') if current_user.is_customer() else url_for('staff.dashboard') }}" class="brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Baye Homes">
+        </a>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <!-- Notification placeholder -->
+            <a href="{{ url_for('staff.notifications') if current_user.is_staff_user() else '#' }}" class="text-secondary"><i class="fas fa-bell fa-lg"></i></a>
+            <!-- User dropdown -->
+            <div class="dropdown avatar-dropdown">
+                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if current_user.profile and current_user.profile.avatar_url %}
+                        <img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}" alt="Avatar">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/default-avatar.png') }}" alt="Avatar">
+                    {% endif %}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                    <li><span class="dropdown-item-text fw-bold">{{ current_user.get_full_name() }}</span></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ url_for('customer.profile' if current_user.role == 'customer' else 'staff.view_profile', staff_id=current_user.id) }}"><i class="fas fa-user me-2"></i> Profile</a></li>
+                    <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="nav flex-column">
+            <!-- Customer Sidebar Items -->
+            {% if current_user.is_customer() %}
+                <div class="nav-section">Customer Menu</div>
+                <a class="nav-link {% if request.endpoint == 'customer.dashboard' %}active{% endif %}" href="{{ url_for('customer.dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a class="nav-link {% if request.endpoint == 'customer.profile' %}active{% endif %}" href="{{ url_for('customer.profile') }}">
+                    <i class="fas fa-user"></i> My Profile
+                </a>
+                <a class="nav-link {% if request.endpoint == 'customer.saved_properties' %}active{% endif %}" href="{{ url_for('customer.saved_properties') }}">
+                    <i class="fas fa-heart"></i> Saved Properties
+                </a>
+                <a class="nav-link {% if request.endpoint == 'customer.inquiries' %}active{% endif %}" href="{{ url_for('customer.inquiries') }}">
+                    <i class="fas fa-question-circle"></i> Inquiries
+                </a>
+                <a class="nav-link {% if request.endpoint == 'customer.purchases' %}active{% endif %}" href="{{ url_for('customer.purchases') }}">
+                    <i class="fas fa-home"></i> Purchases
+                </a>
+                <a class="nav-link {% if request.endpoint == 'customer.payments' %}active{% endif %}" href="{{ url_for('customer.payments') }}">
+                    <i class="fas fa-credit-card"></i> Payment History
+                </a>
+            {% endif %}
+
+            <!-- Staff / Admin Sidebar Items -->
+            {% if current_user.is_staff_user() %}
+                <div class="nav-section">Staff Tools</div>
+                <a class="nav-link {% if request.endpoint == 'staff.dashboard' %}active{% endif %}" href="{{ url_for('staff.dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a class="nav-link {% if request.endpoint == 'crm.list_leads' %}active{% endif %}" href="{{ url_for('crm.list_leads') }}">
+                    <i class="fas fa-users"></i> Leads
+                </a>
+                <a class="nav-link {% if request.endpoint == 'sales.list_sales' %}active{% endif %}" href="{{ url_for('sales.list_sales') }}">
+                    <i class="fas fa-shopping-cart"></i> Sales
+                </a>
+                <a class="nav-link {% if request.endpoint == 'investment.admin_investments' or request.endpoint == 'investment.admin_packages' %}active{% endif %}" href="{{ url_for('investment.admin_investments') }}">
+                    <i class="fas fa-chart-line"></i> Investments
+                </a>
+                <a class="nav-link {% if request.endpoint == 'staff.reports' %}active{% endif %}" href="{{ url_for('staff.reports') }}">
+                    <i class="fas fa-clipboard-list"></i> Daily Reports
+                </a>
+                <a class="nav-link {% if request.endpoint == 'staff.chat' %}active{% endif %}" href="{{ url_for('staff.chat') }}">
+                    <i class="fas fa-comments"></i> Staff Chat
+                </a>
+                <a class="nav-link {% if request.endpoint == 'staff.notifications' %}active{% endif %}" href="{{ url_for('staff.notifications') }}">
+                    <i class="fas fa-bell"></i> Notifications
+                </a>
+                {% if current_user.is_admin_user() %}
+                    <a class="nav-link {% if request.endpoint in ['staff.list_staff','staff.create_staff','staff.edit_staff'] %}active{% endif %}" href="{{ url_for('staff.list_staff') }}">
+                        <i class="fas fa-user-cog"></i> Staff Management
+                    </a>
+                    <a class="nav-link {% if request.endpoint == 'staff.import_attendance' %}active{% endif %}" href="{{ url_for('staff.import_attendance') }}">
+                        <i class="fas fa-file-import"></i> Attendance Import
+                    </a>
+                    <a class="nav-link {% if request.endpoint == 'staff.ratings' %}active{% endif %}" href="{{ url_for('staff.ratings') }}">
+                        <i class="fas fa-star"></i> Staff Ratings
+                    </a>
+                    <a class="nav-link {% if request.endpoint == 'staff.activity_logs' %}active{% endif %}" href="{{ url_for('staff.activity_logs') }}">
+                        <i class="fas fa-history"></i> Activity Logs
+                    </a>
+                {% endif %}
+            {% endif %}
+
+            <hr>
+            <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Flash messages -->
+        <div class="alert-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Sidebar toggle script -->
+    <script>
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('sidebarToggle');
+            if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

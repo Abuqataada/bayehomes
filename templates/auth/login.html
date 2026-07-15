@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="col-md-6 col-lg-5">
+        <div class="card border-0 shadow-lg p-4 p-md-5">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="color: var(--bh-deep);">Welcome Back</h2>
+                <p class="text-muted">Log in to your Baye Homes account</p>
+            </div>
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label fw-semibold") }}
+                    {{ form.email(class="form-control form-control-lg", placeholder="you@example.com") }}
+                    {% if form.email.errors %}
+                        <div class="text-danger small mt-1">{{ form.email.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        {{ form.password.label(class="form-label fw-semibold") }}
+                        <a href="{{ url_for('auth.reset_password_request') }}" class="text-decoration-none small">Forgot password?</a>
+                    </div>
+                    {{ form.password(class="form-control form-control-lg", placeholder="••••••••") }}
+                    {% if form.password.errors %}
+                        <div class="text-danger small mt-1">{{ form.password.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3 form-check">
+                    {{ form.remember(class="form-check-input") }}
+                    {{ form.remember.label(class="form-check-label text-muted") }}
+                </div>
+                {{ form.submit(class="btn btn-success w-100 btn-lg rounded-pill") }}
+            </form>
+            <hr class="my-4">
+            <p class="text-center text-muted mb-0">
+                Don't have an account? <a href="{{ url_for('auth.register') }}" class="text-success fw-semibold text-decoration-none">Sign up</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

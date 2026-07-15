@@ -1,0 +1,99 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Staff Attendance Chart{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold mb-0">Staff Attendance Chart</h4>
+  <a class="btn btn-outline-success btn-sm" href="{{ url_for('staff.ratings') }}">Staff Ratings</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <form method="GET" class="row g-2 align-items-end">
+      <div class="col-md-6">
+        <label class="form-label mb-1">Staff</label>
+        <select name="staff_id" class="form-select">
+          {% for s in staff_members %}
+            <option value="{{ s.id }}" {% if s.id == selected_staff_id %}selected{% endif %}>
+              {{ s.get_full_name() }}{% if s.staff_profile and s.staff_profile.staff_id %} ({{ s.staff_profile.staff_id }}){% endif %}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label mb-1">Range</label>
+        <select name="range" class="form-select">
+          <option value="14" {% if range_days == 14 %}selected{% endif %}>Last 14 days</option>
+          <option value="30" {% if range_days == 30 %}selected{% endif %}>Last 30 days</option>
+          <option value="90" {% if range_days == 90 %}selected{% endif %}>Last 90 days</option>
+        </select>
+      </div>
+      <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-success rounded-pill">View</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h5 class="fw-bold mb-1">
+          Attendance ({{ range_days }} days)
+        </h5>
+        <div class="text-muted small">
+          {{ selected_staff_name }}
+        </div>
+      </div>
+      <div class="text-muted small">
+        Records counted per day
+      </div>
+    </div>
+
+    <div style="position: relative; height: 380px;">
+      <canvas id="attendanceChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  const labels = {{ labels | tojson }};
+  const values = {{ values | tojson }};
+
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Attendance Records',
+        data: values,
+        borderColor: '#04AB5E',
+        backgroundColor: 'rgba(4,171,94,0.12)',
+        tension: 0.25,
+        fill: true,
+        pointRadius: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          ticks: {
+            maxRotation: 0,
+            autoSkip: true
+          }
+        },
+        y: {
+          beginAtZero: true,
+          precision: 0
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

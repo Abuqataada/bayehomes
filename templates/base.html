@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Baye Homes is Abuja's trusted real estate company for verified land, buildings, investment properties, and property consultancy.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}Baye Homes, Abuja real estate, land for sale in Abuja, houses for sale in Abuja, property investment Nigeria{% endblock %}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ request.url }}">
+    <meta property="og:site_name" content="Baye Homes">
+    <meta property="og:title" content="Baye Homes - {% block og_title %}Your Real Estate Partner{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Verified Abuja properties, landed investments, buildings, and real estate consultancy from Baye Homes.{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:image" content="{{ url_for('static', filename='images/hero.jpg', _external=True) }}">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      "name": "Baye Homes",
+      "url": "{{ request.url_root }}",
+      "telephone": "+2348128466760",
+      "email": "contact@bayehomes.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Festrut Estate Katampe Main, Street 14 Greenlane Street",
+        "addressLocality": "Abuja",
+        "addressCountry": "NG"
+      }
+    }
+    </script>
+    <title>Baye Homes - {% block title %}Your Real Estate Partner{% endblock %}</title>
+    
+    <!-- External Libraries (CSS only) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+    <!-- ============================================================
+         ALL CUSTOM CSS – merged from style.css + motion layer
+    ============================================================ -->
+    <style>
+        /* ---------- GLOBAL VARIABLES (consistent with brand) ---------- */
+        :root {
+            --bh-deep:    #0a2a24;
+            --bh-deep-2:  #1a4a3e;
+            --bh-green:   #04AB5E;
+            --bh-card-1:  #05271e;
+            --bh-card-2:  #046107;
+            --bh-ease: cubic-bezier(.22, .61, .36, 1);
+        }
+
+        /* ---------- BASE & UTILITY ---------- */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            padding-top: 76px;
+            overflow-x: hidden;
+        }
+        @media (max-width: 991.98px) {
+            body { padding-top: 64px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* ---------- BUTTON & COLOR OVERRIDES (from style.css) ---------- */
+        .btn-success, .bg-success {
+            background-color: var(--bh-green) !important;
+            border-color: var(--bh-green) !important;
+        }
+        .text-success {
+            color: var(--bh-green) !important;
+        }
+        .btn-outline-success {
+            color: var(--bh-green);
+            border-color: var(--bh-green);
+        }
+        .btn-outline-success:hover {
+            background-color: var(--bh-green);
+            border-color: var(--bh-green);
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: #f8f9fa;
+            color: var(--bh-green);
+        }
+        .accordion-button:focus {
+            box-shadow: none;
+            border-color: rgba(4,171,94,0.25);
+        }
+
+        /* ---------- NAVBAR (motion layer) ---------- */
+        .navbar {
+            transition: box-shadow 0.35s var(--bh-ease), padding 0.35s var(--bh-ease);
+            padding-top: .85rem;
+            padding-bottom: .85rem;
+        }
+        .navbar.is-scrolled {
+            box-shadow: 0 .5rem 1.5rem rgba(10, 42, 36, 0.08);
+            padding-top: .5rem;
+            padding-bottom: .5rem;
+        }
+        .navbar-brand img {
+            transition: transform 0.35s var(--bh-ease);
+        }
+        .navbar-brand:hover img {
+            transform: scale(1.05);
+        }
+        .navbar .nav-link {
+            position: relative;
+            transition: color 0.25s var(--bh-ease);
+        }
+        .navbar .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 2px;
+            width: 0%;
+            height: 2px;
+            background: var(--bh-green);
+            transition: width 0.3s var(--bh-ease);
+        }
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            color: var(--bh-green);
+        }
+        .navbar .nav-link:hover::after,
+        .navbar .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* ---------- HOVER LIFT & ICON POP ---------- */
+        .hover-lift {
+            transition: transform 0.4s var(--bh-ease), box-shadow 0.4s var(--bh-ease);
+            will-change: transform;
+        }
+        .hover-lift:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 1.5rem 3rem rgba(10, 42, 36, 0.15) !important;
+        }
+        .icon-pop {
+            display: inline-flex;
+            transition: transform 0.4s var(--bh-ease);
+        }
+        .icon-pop:hover,
+        .hover-lift:hover .icon-pop {
+            transform: scale(1.15) rotate(-6deg);
+        }
+
+        /* ---------- BUTTON ANIMATIONS (lift) ---------- */
+        .btn-success,
+        .btn-outline-success {
+            transition: transform 0.3s var(--bh-ease), box-shadow 0.3s var(--bh-ease), background-color 0.3s var(--bh-ease);
+        }
+        .btn-success:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 .75rem 1.5rem rgba(4, 171, 94, 0.35);
+        }
+        .btn-outline-success:hover {
+            transform: translateY(-3px);
+        }
+
+        /* ---------- FLUID TYPOGRAPHY ---------- */
+        .display-4 { font-size: clamp(1.9rem, 5vw + 0.5rem, 3.5rem); }
+        .display-5 { font-size: clamp(1.6rem, 4vw + 0.5rem, 2.75rem); }
+
+        /* ---------- PROPERTY CARD (from style.css) ---------- */
+        .property-card {
+            transition: transform 0.3s;
+        }
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* ---------- HERO SECTION OFFSET (if used) ---------- */
+        .hero-section {
+            margin-top: -76px;
+        }
+
+        /* ---------- BACK TO TOP BUTTON (motion layer) ---------- */
+        .back-to-top {
+            position: fixed;
+            right: 30px;
+            bottom: 100px;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bh-deep);
+            color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(12px);
+            transition: opacity 0.3s var(--bh-ease), transform 0.3s var(--bh-ease), background-color 0.3s var(--bh-ease);
+            z-index: 999;
+            text-decoration: none;
+            box-shadow: 0 .5rem 1.25rem rgba(10, 42, 36, 0.25);
+        }
+        .back-to-top:hover {
+            background: var(--bh-green);
+            color: #fff;
+        }
+        .back-to-top.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        @media (max-width: 575.98px) {
+            .back-to-top {
+                right: 18px;
+                bottom: 90px;
+                width: 42px;
+                height: 42px;
+            }
+        }
+
+        /* ---------- WHATSAPP FLOATING BUTTON (ALWAYS VISIBLE) ---------- */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 28px;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 10000;          /* ensures it stays above all other elements */
+            transition: transform 0.3s, background-color 0.3s;
+            text-decoration: none;
+        }
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            transform: scale(1.08);
+            color: white;
+        }
+        .chatbot-float {
+            position: fixed;
+            bottom: 86px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--bh-deep);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 10000;
+        }
+        .chatbot-panel {
+            position: fixed;
+            right: 20px;
+            bottom: 150px;
+            width: min(360px, calc(100vw - 32px));
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            box-shadow: 0 1rem 2rem rgba(10, 42, 36, 0.22);
+            z-index: 10001;
+            display: none;
+            overflow: hidden;
+        }
+        @media (max-width: 576px) {
+            .chatbot-panel {
+                right: 14px;
+                bottom: 130px;
+                width: calc(100vw - 28px);
+                border-radius: 10px;
+            }
+            .chatbot-messages {
+                height: 240px;
+                padding: .85rem;
+                font-size: .95rem;
+            }
+            .chatbot-message {
+                max-width: 92%;
+                font-size: .93rem;
+            }
+        }
+        .chatbot-panel.is-open { display: block; }
+        .chatbot-messages { height: 280px; overflow-y: auto; padding: 1rem; background: #f8f9fa; }
+        .chatbot-message { padding: .65rem .8rem; border-radius: 10px; margin-bottom: .7rem; max-width: 88%; font-size: .95rem; }
+        .chatbot-message.bot { background: #fff; color: #212529; }
+        .chatbot-message.user { background: var(--bh-green); color: #fff; margin-left: auto; }
+        /* Pulse ring for attention */
+        .whatsapp-float::before {
+            content: "";
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 2px solid #25d366;
+            opacity: 0.6;
+            animation: bh-ping 2.4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes bh-ping {
+            0%   { transform: scale(1);   opacity: 0.6; }
+            70%  { transform: scale(1.5); opacity: 0; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        /* Responsive WhatsApp button */
+        @media (max-width: 576px) {
+            .whatsapp-float {
+                bottom: 16px;
+                right: 16px;
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+            .back-to-top {
+                bottom: 80px;
+                right: 16px;
+            }
+        }
+
+        /* ---------- COUNTER ANIMATION WRAPPER ---------- */
+        .bh-counter-wrap {
+            font-weight: 700;
+        }
+
+        /* ---------- FOOTER ENHANCEMENTS ---------- */
+        footer a {
+            transition: color 0.25s var(--bh-ease), padding-left 0.25s var(--bh-ease);
+        }
+        footer .list-unstyled a:hover {
+            color: var(--bh-green) !important;
+            padding-left: 4px;
+        }
+        footer .fa-2x {
+            transition: transform 0.3s var(--bh-ease), color 0.3s var(--bh-ease);
+        }
+        footer a:hover .fa-2x,
+        footer .fa-2x:hover {
+            transform: translateY(-4px);
+            color: var(--bh-green) !important;
+        }
+
+        /* ---------- RESPONSIVE (style.css leftovers) ---------- */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* ---------- MOBILE GLOBAL ADJUSTMENTS ---------- */
+        @media (max-width: 576px) {
+            html, body { width: 100%; overflow-x: hidden; }
+            .navbar { padding-top: .65rem; padding-bottom: .65rem; }
+            #navbarNav .nav-link { padding-left: .5rem; padding-right: .5rem; font-size: .98rem; }
+            main { padding-left: .75rem; padding-right: .75rem; }
+            footer { padding-left: .75rem; padding-right: .75rem; }
+            .chatbot-float { bottom: 80px; right: 16px; width: 50px; height: 50px; }
+        }
+
+        @media (max-width: 420px) {
+            .chatbot-panel { bottom: 120px; }
+            #navbarNav .nav-link { font-size: .95rem; }
+        }
+
+        /* Additional block for per‑page overrides (kept empty) */
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Baye Homes" height="30">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/investment-options">Investment Options</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-4 mt-5" data-aos="fade-up" data-aos-duration="600">
+        <div class="container">
+            <div class="row gy-4">
+                <!-- About Column -->
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3">About</h5>
+                    <p class="text-white-50 small">Baye Homes is a trusted real estate company in Abuja, dedicated to providing secure landed properties, quality building projects, and expert consultancy for investors and homeowners.</p>
+                </div>
+
+                <!-- Easy Links Column -->
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3">Easy Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{{ url_for('public.about') }}" class="text-white-50 text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="{{ url_for('public.investment_options') }}" class="text-white-50 text-decoration-none">Services</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Testimonial</a></li>
+                        <li class="mb-2"><a href="{{ url_for('public.contact') }}" class="text-white-50 text-decoration-none">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quick Links Column -->
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Support</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Terms &amp; Condition</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Social Column -->
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3">Contact</h5>
+                    <p class="mb-1"><i class="fas fa-phone me-2"></i> +234 812 846 6760</p>
+                    <p class="mb-3"><i class="fas fa-envelope me-2"></i> contact@bayehomes.com</p>
+                    <div class="d-flex gap-3">
+                        <a href="https://wa.me/2348128466760" class="text-white" target="_blank"><i class="fab fa-whatsapp fa-2x"></i></a>
+                        <a href="https://www.facebook.com/bayehomes/" class="text-white" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
+                        <a href="https://www.instagram.com/bayehomes/" class="text-white" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
+                        <a href="https://www.linkedin.com/in/bayehomes" class="text-white" target="_blank"><i class="fab fa-linkedin fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright Row -->
+            <div class="text-center mt-4 pt-3 border-top border-secondary">
+                <p class="mb-0 text-white-50 small">&copy; 2026 Baye Homes. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button type="button" class="chatbot-float" id="chatbotToggle" aria-label="Open Baye Homes chatbot">
+        <i class="fas fa-comments"></i>
+    </button>
+    <div class="chatbot-panel" id="chatbotPanel" aria-live="polite">
+        <div class="p-3 bg-success text-white d-flex justify-content-between align-items-center">
+            <strong>Baye Homes Assistant</strong>
+            <button type="button" class="btn-close btn-close-white" id="chatbotClose" aria-label="Close"></button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chatbot-message bot">Hello. Ask me about Baye Homes properties, payments, documents, locations, or how to contact the team.</div>
+        </div>
+        <form class="d-flex gap-2 p-3" id="chatbotForm">
+            <input type="text" class="form-control" id="chatbotInput" placeholder="Ask a question" autocomplete="off">
+            <button class="btn btn-success" type="submit"><i class="fas fa-paper-plane"></i></button>
+        </form>
+    </div>
+
+    <!-- WhatsApp Floating Button (always visible) -->
+    <a href="https://wa.me/2348128466760" class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Back to top -->
+    <a href="#top" id="backToTop" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- Global behaviours -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 60 });
+
+            var navbar = document.getElementById('mainNav');
+            var backToTop = document.getElementById('backToTop');
+
+            // active link highlight
+            var currentPath = window.location.pathname;
+            document.querySelectorAll('#navbarNav .nav-link').forEach(function (link) {
+                var href = link.getAttribute('href');
+                if (href === currentPath || (href === '/' && currentPath === '')) {
+                    link.classList.add('active');
+                }
+            });
+
+            // navbar scroll effect + back to top visibility
+            function onScroll() {
+                navbar.classList.toggle('is-scrolled', window.scrollY > 40);
+                backToTop.classList.toggle('is-visible', window.scrollY > 400);
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            var chatbotToggle = document.getElementById('chatbotToggle');
+            var chatbotPanel = document.getElementById('chatbotPanel');
+            var chatbotClose = document.getElementById('chatbotClose');
+            var chatbotForm = document.getElementById('chatbotForm');
+            var chatbotInput = document.getElementById('chatbotInput');
+            var chatbotMessages = document.getElementById('chatbotMessages');
+            function typewriterAppend(el, text, idx, speed) {
+                if (idx >= text.length) return;
+                el.textContent = text.slice(0, idx + 1);
+                idx += 1;
+                setTimeout(function () {
+                    typewriterAppend(el, text, idx, speed);
+                }, speed);
+            }
+
+            function addChatMessage(text, type, animate) {
+                var bubble = document.createElement('div');
+                bubble.className = 'chatbot-message ' + type;
+
+                chatbotMessages.appendChild(bubble);
+
+                if (animate) {
+                    bubble.textContent = '';
+                    typewriterAppend(bubble, text, 0, 18);
+                } else {
+                    bubble.textContent = text;
+                }
+
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            chatbotToggle.addEventListener('click', function () { chatbotPanel.classList.toggle('is-open'); });
+            chatbotClose.addEventListener('click', function () { chatbotPanel.classList.remove('is-open'); });
+            chatbotForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                var message = chatbotInput.value.trim();
+                if (!message) return;
+                addChatMessage(message, 'user');
+                chatbotInput.value = '';
+                fetch('{{ url_for('public.chatbot') }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                }).then(function (response) { return response.json(); })
+                  .then(function (data) { addChatMessage(data.reply || 'Please contact +234 812 846 6760 for help.', 'bot', true); })
+                  .catch(function () { addChatMessage('I could not connect right now. Please WhatsApp +234 812 846 6760.', 'bot'); });
+            });
+
+            // animated counters (data-counter attribute)
+            var counters = document.querySelectorAll('[data-counter]');
+            if (counters.length) {
+                var observer = new IntersectionObserver(function (entries, obs) {
+                    entries.forEach(function (entry) {
+                        if (!entry.isIntersecting) return;
+                        var el = entry.target;
+                        var target = parseInt(el.getAttribute('data-counter'), 10) || 0;
+                        var duration = 1200;
+                        var start = null;
+                        function step(timestamp) {
+                            if (!start) start = timestamp;
+                            var progress = Math.min((timestamp - start) / duration, 1);
+                            el.textContent = Math.floor(progress * target);
+                            if (progress < 1) requestAnimationFrame(step);
+                            else el.textContent = target;
+                        }
+                        requestAnimationFrame(step);
+                        obs.unobserve(el);
+                    });
+                }, { threshold: 0.4 });
+                counters.forEach(function (el) { observer.observe(el); });
+            }
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

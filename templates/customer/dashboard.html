@@ -1,0 +1,89 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Dashboard - Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <h2 class="fw-bold mb-4">Dashboard</h2>
+    <p class="text-muted">Welcome back, {{ current_user.first_name or 'Customer' }}!</p>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="card bg-success text-white shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-heart fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ saved }}</h3>
+                    <p class="mb-0 small">Saved Properties</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card bg-info text-white shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-question-circle fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ inquiries }}</h3>
+                    <p class="mb-0 small">Inquiries</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card bg-warning text-dark shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-home fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ purchases }}</h3>
+                    <p class="mb-0 small">Purchases</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card bg-secondary text-white shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-credit-card fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ payments|length }}</h3>
+                    <p class="mb-0 small">Payments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Payments -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-0">
+            <h5 class="fw-bold mb-0">Recent Payments</h5>
+        </div>
+        <div class="card-body">
+            {% if payments %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <td>₦{{ "{:,.2f}".format(payment.amount) }}</td>
+                                <td>{{ payment.method|title }}</td>
+                                <td>{{ payment.payment_date.strftime('%d/%m/%Y') }}</td>
+                                <td>
+                                    <span class="badge {% if payment.status == 'verified' %}bg-success{% elif payment.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}">
+                                        {{ payment.status|title }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted text-center py-3">No payments recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

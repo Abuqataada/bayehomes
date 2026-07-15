@@ -1,0 +1,64 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Property Inquiries – Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">Property Inquiries</h4>
+        <span class="badge bg-secondary">{{ inquiries|length }} inquiries</span>
+    </div>
+
+    {% if inquiries %}
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Property</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inquiry in inquiries %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('public.property_detail', slug=inquiry.property.slug) }}" class="text-decoration-none fw-semibold">
+                                            {{ inquiry.property.title }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{ inquiry.message[:60] }}{% if inquiry.message|length > 60 %}…{% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if inquiry.status == 'responded' %}bg-success{% elif inquiry.status == 'pending' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                            {{ inquiry.status|title }}
+                                        </span>
+                                    </td>
+                                    <td>{{ inquiry.created_at.strftime('%d/%m/%Y') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('public.property_detail', slug=inquiry.property.slug) }}" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i> View Property
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-question-circle fa-4x text-muted mb-3"></i>
+            <h5 class="text-muted">No property inquiries yet</h5>
+            <p class="text-muted small">Browse our <a href="{{ url_for('public.properties') }}">properties</a> and ask questions.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

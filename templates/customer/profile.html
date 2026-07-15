@@ -1,0 +1,128 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}My Profile - Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0">
+                    <h4 class="fw-bold mb-0">My Profile</h4>
+                    <p class="text-muted small">Update your personal information</p>
+                </div>
+                <div class="card-body">
+                    <!-- Avatar Display -->
+                    <div class="text-center mb-4">
+                        {% if current_user.profile and current_user.profile.avatar_url %}
+                            <img src="{{ url_for('static', filename=current_user.profile.avatar_url) }}" alt="Avatar" class="rounded-circle img-fluid" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid var(--bh-green);">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/default-avatar.png') }}" alt="Avatar" class="rounded-circle img-fluid" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid var(--bh-green);">
+                        {% endif %}
+                        <div class="mt-2">
+                            <span class="badge bg-success">{{ current_user.role|title }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Email Verification Status -->
+                    <div class="mb-4">
+                        {% if current_user.email_verified %}
+                            <div class="alert alert-success" role="alert">
+                                <i class="fas fa-check-circle me-2"></i> Your email address has been verified.
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i> Your email address is not yet verified.
+                                <a href="{{ url_for('auth.resend_verification') }}" class="btn btn-sm btn-outline-warning ms-2">Resend Verification Email</a>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Profile Form -->
+                    <form method="POST" action="{{ url_for('customer.profile') }}" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.first_name.label(class="form-label fw-semibold") }}
+                                {{ form.first_name(class="form-control", placeholder="First name") }}
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger small mt-1">{{ form.first_name.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form.last_name.label(class="form-label fw-semibold") }}
+                                {{ form.last_name(class="form-control", placeholder="Last name") }}
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger small mt-1">{{ form.last_name.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.phone.label(class="form-label fw-semibold") }}
+                            {{ form.phone(class="form-control", placeholder="Phone number") }}
+                            {% if form.phone.errors %}
+                                <div class="text-danger small mt-1">{{ form.phone.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Email (read-only) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email Address</label>
+                            <input type="email" class="form-control bg-light" value="{{ current_user.email }}" readonly>
+                            <small class="text-muted">Email cannot be changed. Contact support if needed.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.address.label(class="form-label fw-semibold") }}
+                            {{ form.address(class="form-control", rows="2", placeholder="Street address") }}
+                            {% if form.address.errors %}
+                                <div class="text-danger small mt-1">{{ form.address.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                {{ form.city.label(class="form-label fw-semibold") }}
+                                {{ form.city(class="form-control", placeholder="City") }}
+                                {% if form.city.errors %}
+                                    <div class="text-danger small mt-1">{{ form.city.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.state.label(class="form-label fw-semibold") }}
+                                {{ form.state(class="form-control", placeholder="State") }}
+                                {% if form.state.errors %}
+                                    <div class="text-danger small mt-1">{{ form.state.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.country.label(class="form-label fw-semibold") }}
+                                {{ form.country(class="form-control", placeholder="Country") }}
+                                {% if form.country.errors %}
+                                    <div class="text-danger small mt-1">{{ form.country.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.avatar.label(class="form-label fw-semibold") }}
+                            {{ form.avatar(class="form-control") }}
+                            <small class="text-muted">Upload a new profile picture (JPG, PNG, GIF).</small>
+                            {% if form.avatar.errors %}
+                                <div class="text-danger small mt-1">{{ form.avatar.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-2 rounded-pill">
+                            <i class="fas fa-save me-2"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

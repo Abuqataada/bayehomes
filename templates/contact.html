@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Baye Homes{% endblock %}
+
+{% block meta_description %}Contact Baye Homes for verified land, building investment options, documentation guidance, and property consultancy.{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="row g-4 align-items-start">
+    <div class="col-lg-7">
+      <div class="mb-4">
+        <h1 class="fw-bold mb-2">Contact Baye Homes</h1>
+        <p class="text-muted mb-0">
+          Send us your details and we’ll get back to you as soon as possible.
+        </p>
+      </div>
+
+      {% if success %}
+        <div class="alert alert-success shadow-sm">
+          <i class="fas fa-check-circle me-2"></i>
+          Message received successfully. Our team will contact you shortly.
+        </div>
+      {% endif %}
+
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <form method="POST" action="{{ url_for('public.contact') }}">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  class="form-control"
+                  placeholder="Your name"
+                  required
+                >
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="you@example.com"
+                  required
+                >
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Phone</label>
+                <input
+                  type="text"
+                  name="phone"
+                  class="form-control"
+                  placeholder="+234 812 345 6789"
+                >
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">How can we help?</label>
+                <input
+                  type="text"
+                  name="subject"
+                  class="form-control"
+                  placeholder="e.g. Land inquiry, investment plan, documents..."
+                >
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-semibold">Message</label>
+                <textarea
+                  name="message"
+                  class="form-control"
+                  rows="6"
+                  placeholder="Write your message..."
+                  required
+                ></textarea>
+              </div>
+
+              <div class="col-12 d-flex gap-2 align-items-center mt-2">
+                <button type="submit" class="btn btn-success rounded-pill px-4">
+                  <i class="fas fa-paper-plane me-2"></i>Send Message
+                </button>
+                <a href="/" class="btn btn-outline-success rounded-pill">
+                  Back Home
+                </a>
+              </div>
+            </div>
+          </form>
+
+          <div class="mt-4 small text-muted">
+            By submitting this form, you agree to be contacted by Baye Homes.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="position-sticky" style="top: 96px;">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-3">Our Location</h4>
+            <div class="d-flex gap-3 align-items-start mb-3">
+              <div class="text-success fs-4">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div>
+                <div class="fw-semibold">Festrut Estate, Katampe Main</div>
+                <div class="text-muted small">Street 14 Greenlane Street, Abuja</div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-3 align-items-start mb-3">
+              <div class="text-success fs-4">
+                <i class="fas fa-phone"></i>
+              </div>
+              <div>
+                <div class="fw-semibold">Phone</div>
+                <div class="text-muted small">+234 812 846 6760</div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-3 align-items-start mb-3">
+              <div class="text-success fs-4">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div>
+                <div class="fw-semibold">Email</div>
+                <div class="text-muted small">contact@bayehomes.com</div>
+              </div>
+            </div>
+
+            <hr>
+
+            <div class="d-grid gap-2">
+              <a href="https://wa.me/2348128466760" target="_blank" class="btn btn-success rounded-pill">
+                <i class="fab fa-whatsapp me-2"></i>WhatsApp Us
+              </a>
+              <a href="/investment-options" class="btn btn-outline-success rounded-pill">
+                <i class="fas fa-chart-line me-2"></i>Explore Investment Options
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-3">Need Faster Support?</h4>
+            <p class="text-muted mb-3">
+              Use the chatbot or WhatsApp for quick answers about property availability, payment plans, and documentation.
+            </p>
+            <a href="/chatbot" class="btn btn-outline-success rounded-pill w-100">
+              <i class="fas fa-comments me-2"></i>Open Chatbot
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

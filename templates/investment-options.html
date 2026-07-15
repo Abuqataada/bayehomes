@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Investment Properties in Abuja - Baye Homes{% endblock %}
+{% block meta_description %}Search Baye Homes investment properties, lands, and buildings in Abuja. View verified property options, prices, locations, and details.{% endblock %}
+
+{% block content %}
+<section class="hero-section text-white text-center d-flex align-items-center" style="min-height: 48vh; background: linear-gradient(135deg, #0a2a24 0%, #1a4a3e 100%); position: relative;">
+    <div class="container position-relative" style="z-index: 2;">
+        <h1 class="display-4 fw-bold mb-3" data-aos="fade-up">Investment Options</h1>
+        <p class="lead col-lg-7 mx-auto mb-0" data-aos="fade-up" data-aos-delay="100">Search verified land and building opportunities managed directly from the Baye Homes admin dashboard.</p>
+    </div>
+</section>
+
+<section class="py-4 bg-white border-bottom">
+    <div class="container">
+        <form method="GET" action="{{ url_for('public.investment_options') }}" class="row g-3 align-items-end">
+            <div class="col-lg-5 col-md-6">
+                <label class="form-label fw-semibold">Search Properties</label>
+                <input type="search" name="search" value="{{ search }}" class="form-control form-control-lg" placeholder="Estate, location, property name">
+            </div>
+            <div class="col-lg-2 col-md-3">
+                <label class="form-label fw-semibold">Type</label>
+                <select name="type" class="form-select form-select-lg">
+                    <option value="">All</option>
+                    <option value="land" {% if property_type == 'land' %}selected{% endif %}>Land</option>
+                    <option value="building" {% if property_type == 'building' %}selected{% endif %}>Building</option>
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <label class="form-label fw-semibold">Location</label>
+                <select name="location" class="form-select form-select-lg">
+                    <option value="">All Locations</option>
+                    {% for loc in locations %}
+                        <option value="{{ loc }}" {% if location == loc %}selected{% endif %}>{{ loc }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <button type="submit" class="btn btn-success btn-lg w-100"><i class="fas fa-search me-2"></i>Search</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        {% for property in investment_properties %}
+        <div class="row align-items-center g-5 mb-5 pb-5 border-bottom {% if loop.index0 is odd %}flex-lg-row-reverse{% endif %}">
+            <div class="col-lg-6" data-aos="fade-up">
+                {% set img = property.get_primary_image() %}
+                <a href="{{ url_for('public.property_detail', slug=property.slug) }}" class="d-block">
+                    <img src="{{ url_for('static', filename='uploads/properties/' + img) }}" alt="{{ property.title }}" class="img-fluid rounded-3 shadow-lg" style="width:100%; min-height:320px; max-height:420px; object-fit:cover;" onerror="this.src='{{ url_for('static', filename='images/hero.jpg') }}'">
+                </a>
+            </div>
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <span class="badge bg-success mb-3">{{ property.property_type|capitalize }}</span>
+                <h2 class="fw-bold mb-2">{{ property.title }}</h2>
+                <p class="text-muted mb-2"><i class="fas fa-map-marker-alt text-success me-2"></i>{{ property.location }}{% if property.city %}, {{ property.city }}{% endif %}</p>
+                <p class="h4 text-success fw-bold mb-3">NGN{{ "{:,.2f}".format(property.price) }}</p>
+                <div class="accordion" id="property-{{ property.id }}">
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h3 class="accordion-header"><button class="accordion-button bg-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#overview-{{ property.id }}">Property Overview</button></h3>
+                        <div id="overview-{{ property.id }}" class="accordion-collapse collapse show" data-bs-parent="#property-{{ property.id }}">
+                            <div class="accordion-body text-muted">{{ property.description or 'Contact Baye Homes for the full estate brief, inspection schedule, and documentation details.' }}</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h3 class="accordion-header"><button class="accordion-button collapsed bg-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#details-{{ property.id }}">Details</button></h3>
+                        <div id="details-{{ property.id }}" class="accordion-collapse collapse" data-bs-parent="#property-{{ property.id }}">
+                            <div class="accordion-body">
+                                <div class="row g-2 small">
+                                    {% if property.estate %}<div class="col-6"><strong>Estate:</strong> {{ property.estate }}</div>{% endif %}
+                                    {% if property.size_sqm %}<div class="col-6"><strong>Size:</strong> {{ property.size_sqm }} sqm</div>{% endif %}
+                                    {% if property.bedrooms %}<div class="col-6"><strong>Bedrooms:</strong> {{ property.bedrooms }}</div>{% endif %}
+                                    {% if property.bathrooms %}<div class="col-6"><strong>Bathrooms:</strong> {{ property.bathrooms }}</div>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <a href="{{ url_for('public.property_detail', slug=property.slug) }}" class="btn btn-success rounded-pill px-4">View Full Details</a>
+                    <a href="https://wa.me/2348128466760?text=I'm%20interested%20in%20{{ property.title|urlencode }}" class="btn btn-outline-success rounded-pill px-4">WhatsApp Us</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <h2 class="fw-bold">No matching properties found</h2>
+            <p class="text-muted">Try a different search term, type, or location.</p>
+            <a href="{{ url_for('public.investment_options') }}" class="btn btn-outline-success rounded-pill px-4">Clear Search</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

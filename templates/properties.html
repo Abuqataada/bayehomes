@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Properties for Sale in Abuja{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Properties</h1>
+    
+    <!-- Search & Filter Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="/properties" id="filterForm">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" placeholder="Search by title or location" value="{{ search }}">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="type" class="form-select">
+                            <option value="">All Types</option>
+                            <option value="land" {% if property_type=='land' %}selected{% endif %}>Land</option>
+                            <option value="building" {% if property_type=='building' %}selected{% endif %}>Building</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select name="location" class="form-select">
+                            <option value="">All Locations</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc }}" {% if location==loc %}selected{% endif %}>{{ loc }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success w-100">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Property Grid -->
+    <div class="row">
+        {% for property in properties %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 property-card">
+                <img src="{{ url_for('static', filename='uploads/properties/' + property.get_primary_image()) }}" class="card-img-top" alt="{{ property.title }}" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <span class="badge bg-success mb-2">{{ property.property_type|capitalize }}</span>
+                    <h5 class="card-title">{{ property.title }}</h5>
+                    <p class="card-text"><i class="fas fa-map-marker-alt"></i> {{ property.location }}</p>
+                    <p class="fw-bold text-success">₦{{ "{:,.2f}".format(property.price) }}</p>
+                    <a href="/property/{{ property.slug }}" class="btn btn-outline-success w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-center">No properties found.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% for page_num in pagination.iter_pages() %}
+                {% if page_num %}
+                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ page_num }}{% if search %}&search={{ search }}{% endif %}{% if property_type %}&type={{ property_type }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if min_price %}&min_price={{ min_price }}{% endif %}{% if max_price %}&max_price={{ max_price }}{% endif %}">{{ page_num }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,100 @@
+{% extends "base_staff.html" %}
+
+{% block title %}Daily Reports{% endblock %} {%
+block content %}
+<h4 class="fw-bold mb-4">Daily Reports</h4>
+{% if not current_user.is_admin_user() %}
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <form method="POST" class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">Date</label
+        ><input
+          type="date"
+          name="report_date"
+          class="form-control"
+          value="{{ current_date or '' }}"
+        />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Leads Contacted</label
+        ><input
+          type="number"
+          name="leads_contacted"
+          class="form-control"
+          value="0"
+        />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Site Visits</label
+        ><input
+          type="number"
+          name="site_visits"
+          class="form-control"
+          value="0"
+        />
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Sales Closed</label
+        ><input
+          type="number"
+          name="sales_closed"
+          class="form-control"
+          value="0"
+        />
+      </div>
+      <div class="col-12">
+        <label class="form-label">Summary</label
+        ><textarea
+          name="summary"
+          rows="4"
+          class="form-control"
+          required
+        ></textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Challenges</label
+        ><textarea name="challenges" rows="2" class="form-control"></textarea>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-success rounded-pill px-4">Submit Report</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+<div class="card border-0 shadow-sm">
+  <div class="table-responsive">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Staff</th>
+          <th>Summary</th>
+          <th>Leads</th>
+          <th>Visits</th>
+          <th>Sales</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+        <tr>
+          <td>{{ report.report_date }}</td>
+          <td>{{ report.staff.get_full_name() }}</td>
+          <td>{{ report.summary }}</td>
+          <td>{{ report.leads_contacted }}</td>
+          <td>{{ report.site_visits }}</td>
+          <td>{{ report.sales_closed }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-4">
+            No reports yet.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

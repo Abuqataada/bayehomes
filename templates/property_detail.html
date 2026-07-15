@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ property.title }} - Baye Homes{% endblock %}
+{% block meta_description %}{{ property.title }} in {{ property.location }}. View price, property details, photos, and map location from Baye Homes.{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light" style="margin-top:-76px; padding-top:120px !important;">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-7">
+                {% set primary = property.get_primary_image() %}
+                <img src="{{ url_for('static', filename='uploads/properties/' + primary) }}" alt="{{ property.title }}" class="img-fluid rounded-3 shadow" style="width:100%; max-height:520px; object-fit:cover;" onerror="this.src='{{ url_for('static', filename='images/hero.jpg') }}'">
+            </div>
+            <div class="col-lg-5">
+                <span class="badge bg-success mb-3">{{ property.property_type|capitalize }}</span>
+                <h1 class="display-5 fw-bold mb-3">{{ property.title }}</h1>
+                <p class="text-muted fs-5"><i class="fas fa-map-marker-alt text-success me-2"></i>{{ property.location }}{% if property.city %}, {{ property.city }}{% endif %}</p>
+                <p class="display-6 text-success fw-bold">NGN{{ "{:,.2f}".format(property.price) }}</p>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <a href="https://wa.me/2348128466760?text=I'm%20interested%20in%20{{ property.title|urlencode }}" class="btn btn-success btn-lg rounded-pill px-4"><i class="fab fa-whatsapp me-2"></i>Enquire</a>
+                    <a href="{{ url_for('public.investment_options') }}" class="btn btn-outline-success btn-lg rounded-pill px-4">More Properties</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <h2 class="fw-bold mb-3">Property Details</h2>
+                <p class="text-muted fs-5">{{ property.description or 'Contact Baye Homes for the full estate brief, site inspection schedule, and documentation details.' }}</p>
+                <div class="row g-3 mt-3">
+                    {% if property.estate %}<div class="col-md-6"><div class="p-3 bg-light rounded"><strong>Estate</strong><br>{{ property.estate }}</div></div>{% endif %}
+                    {% if property.plot_number %}<div class="col-md-6"><div class="p-3 bg-light rounded"><strong>Plot</strong><br>{{ property.plot_number }}</div></div>{% endif %}
+                    {% if property.size_sqm %}<div class="col-md-6"><div class="p-3 bg-light rounded"><strong>Size</strong><br>{{ property.size_sqm }} sqm</div></div>{% endif %}
+                    {% if property.bedrooms %}<div class="col-md-6"><div class="p-3 bg-light rounded"><strong>Bedrooms</strong><br>{{ property.bedrooms }}</div></div>{% endif %}
+                    {% if property.bathrooms %}<div class="col-md-6"><div class="p-3 bg-light rounded"><strong>Bathrooms</strong><br>{{ property.bathrooms }}</div></div>{% endif %}
+                    {% if property.assigned_staff %}<div class="col-md-6"><div class="p-3 bg-light rounded"><strong>Managed By</strong><br>{{ property.assigned_staff.get_full_name() }}</div></div>{% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <h2 class="fw-bold mb-3">Map Location</h2>
+                <div class="ratio ratio-4x3 rounded-3 overflow-hidden shadow-sm">
+                    {% if property.latitude and property.longitude %}
+                        <iframe title="Map for {{ property.title }}" src="https://www.google.com/maps?q={{ property.latitude }},{{ property.longitude }}&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    {% else %}
+                        <iframe title="Map for {{ property.title }}" src="https://www.google.com/maps?q={{ (property.location ~ ', ' ~ property.city ~ ', Nigeria')|urlencode }}&z=14&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if property.images and property.images|length > 1 %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="fw-bold mb-4">Gallery</h2>
+        <div class="row g-3">
+            {% for image in property.images[1:] %}
+            <div class="col-md-4"><img src="{{ url_for('static', filename='uploads/properties/' + image) }}" alt="{{ property.title }}" class="img-fluid rounded shadow-sm" style="height:240px; width:100%; object-fit:cover;"></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

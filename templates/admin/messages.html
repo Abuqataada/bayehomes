@@ -1,0 +1,59 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Messages – Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="fw-bold mb-3">Contact Messages</h3>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Message</th>
+                            <th>Read</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messages %}
+                            <tr>
+                                <td class="fw-semibold">{{ message.name }}</td>
+                                <td>{{ message.email }}</td>
+                                <td>{{ message.phone or '—' }}</td>
+                                <td style="max-width:420px;">
+                                    <div class="text-muted small" style="white-space: pre-wrap;">{{ message.message }}</div>
+                                </td>
+                                <td>
+                                    {% if message.is_read %}
+                                        <span class="badge bg-success">Read</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Unread</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if not message.is_read %}
+                                        <a href="{{ url_for('admin.mark_read', id=message.id) }}" class="btn btn-sm btn-success rounded-pill">Mark read</a>
+                                    {% else %}
+                                        <span class="text-muted small">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-5">No messages found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

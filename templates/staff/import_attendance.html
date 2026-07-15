@@ -1,0 +1,24 @@
+{% extends "admin/base_admin.html" %}
+
+
+{% block title %}Import Attendance{% endblock %}
+{% block content %}
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <h4 class="fw-bold mb-3">Import Attendance</h4>
+    <p class="text-muted">
+      Upload CSV or Excel. Supported columns include staff_id or email, date,
+      status, check_in/time_in, check_out/time_out.
+    </p>
+    <form method="POST" enctype="multipart/form-data">
+      <input
+        type="file"
+        name="attendance_file"
+        class="form-control mb-3"
+        accept=".csv,.xlsx,.xls"
+        required
+      /><button class="btn btn-success rounded-pill px-4">Import</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

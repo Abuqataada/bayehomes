@@ -1,0 +1,64 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Blog Form - Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="fw-bold mb-3">{{ 'Edit' if post else 'Add' }} Blog Post</h3>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% if post %}
+                    <input type="hidden" name="id" value="{{ post.id }}">
+                {% endif %}
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" class="form-control" value="{{ post.title if post else '' }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Author</label>
+                        <input type="text" name="author" class="form-control" value="{{ post.author if post else '' }}">
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Excerpt</label>
+                        <textarea name="excerpt" class="form-control" rows="3">{{ post.excerpt if post else '' }}</textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Content</label>
+                        <textarea name="content" class="form-control" rows="8" required>{{ post.content if post else '' }}</textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Image</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                        {% if post and post.image %}
+                            <div class="mt-2">
+                                <img src="{{ url_for('static', filename='uploads/properties/' + post.image) }}" alt="Blog image" class="img-thumbnail" style="max-height:120px;">
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Publish</label>
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" name="is_published" id="is_published" {% if post and post.is_published %}checked{% endif %}>
+                            <label class="form-check-label" for="is_published">Is published</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end mt-4">
+                    <a href="{{ url_for('admin.blog_posts') }}" class="btn btn-outline-secondary rounded-pill">Cancel</a>
+                    <button type="submit" class="btn btn-success rounded-pill">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

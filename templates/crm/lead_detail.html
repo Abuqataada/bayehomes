@@ -1,0 +1,183 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Lead – Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">Lead Details</h4>
+        <div class="text-muted small">
+            ID: <span class="text-dark">{{ lead.id }}</span>
+        </div>
+    </div>
+
+    <!-- Flash messages handled in base -->
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h5 class="mb-1">{{ lead.name }}</h5>
+                            <div class="text-muted small">{{ lead.email or '' }} {{ '•' if lead.email and lead.phone else '' }} {{ lead.phone or '' }}</div>
+                        </div>
+                        <div class="text-end">
+                            {% if lead.status %}
+                                <span class="badge bg-success">{{ lead.status.value if lead.status.value is defined else lead.status }}</span>
+                            {% endif %}
+                            <div class="text-muted small mt-2">Source: {{ lead.source.value if lead.source and lead.source.value is defined else (lead.source or '—') }}</div>
+                        </div>
+                    </div>
+
+                    {% if lead.message %}
+                        <hr>
+                        <h6 class="fw-semibold">Message</h6>
+                        <p class="text-muted mb-0" style="white-space: pre-wrap;">{{ lead.message }}</p>
+                    {% endif %}
+
+                    <hr>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <h6 class="fw-semibold">Assigned To</h6>
+                            <div class="text-muted">{{ lead.assigned_to or '—' }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-semibold">Created At</h6>
+                            <div class="text-muted">{{ lead.created_at.strftime('%Y-%m-%d %H:%M') if lead.created_at else '' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-3">Add Note</h6>
+                    <form method="POST" action="{{ url_for('crm.add_note', lead_id=lead.id) }}">
+                        {{ note_form.hidden_tag() if note_form }}
+                        <div class="mb-3">
+                            {{ note_form.note(class="form-control", rows="4") }}
+                        </div>
+                        {% if note_form.note.errors %}
+                            <div class="text-danger small mb-2">{{ note_form.note.errors[0] }}</div>
+                        {% endif %}
+                        <button type="submit" class="btn btn-success rounded-pill">
+                            <i class="fas fa-plus me-2"></i> Add Note
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h6 class="fw-semibold mb-3">Notes</h6>
+                    <div>
+                        {% if lead.notes %}
+                            {% for n in lead.notes.order_by('created_at').all() %}
+                                <div class="border rounded-3 p-3 mb-2">
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                        <div>
+                                            <div class="fw-semibold">{{ n.created_by }}</div>
+                                            <div class="text-muted small">{{ n.created_at.strftime('%Y-%m-%d %H:%M') if n.created_at else '' }}</div>
+                                        </div>
+                                    </div>
+                                    <p class="mb-0 text-muted" style="white-space: pre-wrap;">{{ n.note }}</p>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-muted">No notes yet.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-semibold">Update Status</h6>
+                    <form method="POST" action="{{ url_for('crm.update_status', lead_id=lead.id) }}" class="mt-3">
+                        <div class="mb-3">
+                            <select name="status" class="form-select">
+                                {% for s in lead.status.__class__ %}
+                                    <option value="{{ s.value }}" {% if lead.status==s %}selected{% endif %}>{{ s.value }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success rounded-pill w-100">
+                            Save Status
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h6 class="fw-semibold">Schedule Follow-up</h6>
+                    <form method="POST" action="{{ url_for('crm.set_reminder', lead_id=lead.id) }}" class="mt-3">
+                        {{ reminder_form.hidden_tag() if reminder_form }}
+                        <div class="mb-3">
+                            {{ reminder_form.reminder_date(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ reminder_form.note(class="form-control", rows="3") }}
+                        </div>
+                        <button type="submit" class="btn btn-success rounded-pill w-100">
+                            <i class="fas fa-calendar-alt me-2"></i> Set Reminder
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h6 class="fw-semibold">Assign Staff</h6>
+                    <form method="POST" action="{{ url_for('crm.assign_staff', lead_id=lead.id) }}" class="mt-3">
+                        {{ assign_form.hidden_tag() if assign_form }}
+                        <div class="mb-3">
+                            {{ assign_form.assigned_to(class="form-select") }}
+                        </div>
+                        <button type="submit" class="btn btn-outline-success rounded-pill w-100">Assign</button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h6 class="fw-semibold mb-3">Follow-up Reminders</h6>
+                    <div>
+                        {% if lead.reminders %}
+                            {% for r in lead.reminders.order_by('reminder_date').all() %}
+                                <div class="border rounded-3 p-3 mb-2">
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                        <div>
+                                            <div class="fw-semibold">{{ r.reminder_date.strftime('%Y-%m-%d') if r.reminder_date else '' }}</div>
+                                            <div class="text-muted small">{% if r.is_completed %}Completed{% else %}Pending{% endif %}</div>
+                                        </div>
+                                        {% if not r.is_completed %}
+                                            <form method="POST" action="{{ url_for('crm.complete_reminder', reminder_id=r.id) }}">
+                                                <button type="submit" class="btn btn-sm btn-success rounded-pill">Complete</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                    {% if r.note %}
+                                        <p class="mb-0 text-muted" style="white-space: pre-wrap;">{{ r.note }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-muted">No reminders yet.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-2">Convert Lead</h6>
+                    <div class="text-muted small mb-3">Creates a new customer user and sends a welcome email.</div>
+                    <form method="POST" action="{{ url_for('crm.convert_lead', lead_id=lead.id) }}">
+                        <button type="submit" class="btn btn-warning w-100 rounded-pill">
+                            <i class="fas fa-exchange-alt me-2"></i> Convert
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

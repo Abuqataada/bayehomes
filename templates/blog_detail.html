@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} – Baye Homes{% endblock %}
+
+{% block meta_description %}{{ post.excerpt or post.content|striptags|truncate(160, True, '…') }}{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+    <div class="mb-4">
+        <a href="{{ url_for('public.blog') }}" class="text-decoration-none text-success fw-semibold">
+            <i class="fas fa-arrow-left me-2"></i> Back to Blog
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        {% if post.image %}
+            <img
+                src="{{ url_for('static', filename='uploads/blog/' ~ post.image) }}"
+                class="card-img-top"
+                alt="{{ post.title }}"
+                style="max-height: 420px; object-fit: cover;"
+            >
+        {% endif %}
+
+        <div class="card-body p-4">
+            <h1 class="fw-bold mb-2">{{ post.title }}</h1>
+            <div class="text-muted mb-3">
+                {{ post.author or 'Baye Homes' }}
+                •
+                {{ post.created_at.strftime('%Y-%m-%d') if post.created_at else '' }}
+                •
+                {{ post.views or 0 }} views
+            </div>
+
+            {% if post.excerpt %}
+                <p class="text-muted fs-5 mb-4">{{ post.excerpt }}</p>
+            {% endif %}
+
+            <div class="blog-content">
+                {{ post.content | safe }}
+            </div>
+
+            <div class="mt-5 pt-4 border-top">
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-success rounded-pill" href="{{ url_for('public.contact') }}">
+                        Contact Baye Homes
+                    </a>
+                    <a class="btn btn-outline-success rounded-pill" href="{{ url_for('public.investment_options') }}">
+                        Explore Investment Options
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

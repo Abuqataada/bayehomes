@@ -1,0 +1,11 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Login
+Flask-WTF
+WTForms
+python-dotenv
+email-validator
+Pillow
+psycopg2-binary
+openpyxl

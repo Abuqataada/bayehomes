@@ -1,0 +1,171 @@
+[
+  {
+    "title": "Nevada Homes Phase 1",
+    "slug": "nevada-homes-phase-1",
+    "property_type": "land",
+    "estate": null,
+    "plot_number": null,
+    "size_sqm_options": [
+      { "size_sqm": 200, "price": 3500000 },
+      { "size_sqm": 300, "price": 6000000 },
+      { "size_sqm": 600, "price": 12000000 }
+    ],
+    "location": "Kuje, Abuja",
+    "city": "Abuja",
+    "state": "FCT",
+    "bedrooms": null,
+    "bathrooms": null,
+    "status": "available",
+    "images": null,
+    "documents": null,
+    "featured": false
+  },
+  {
+    "title": "Saudat Residence",
+    "slug": "saudat-residence",
+    "property_type": "land",
+    "estate": null,
+    "plot_number": null,
+    "size_sqm_options": [
+      { "size_sqm": 200, "price": 3200000 },
+      { "size_sqm": 300, "price": 4550000 },
+      { "size_sqm": 600, "price": 7200000 }
+    ],
+    "location": "Kuje, Abuja",
+    "city": "Abuja",
+    "state": "FCT",
+    "bedrooms": null,
+    "bathrooms": null,
+    "status": "available",
+    "images": null,
+    "documents": null,
+    "featured": false
+  },
+  {
+    "title": "Empire Estate",
+    "slug": "empire-estate",
+    "property_type": "land",
+    "estate": null,
+    "plot_number": null,
+    "size_sqm_options": [
+      { "size_sqm": 200, "price": 28999000 },
+      { "size_sqm": 300, "price": 42999000 },
+      { "size_sqm": 600, "price": 67999000 }
+    ],
+    "location": "Guzape main district, Abuja",
+    "city": "Abuja",
+    "state": "FCT",
+    "bedrooms": null,
+    "bathrooms": null,
+    "status": "available",
+    "images": null,
+    "documents": null,
+    "featured": false
+  },
+  {
+    "title": "Geddo Estate",
+    "slug": "geddo-estate",
+    "property_type": "land",
+    "estate": null,
+    "plot_number": null,
+    "size_sqm_options": [
+      { "size_sqm": 200, "price": 12000000 },
+      { "size_sqm": 300, "price": 18000000 },
+      { "size_sqm": 600, "price": 25000000 }
+    ],
+    "location": "Lugbe, Abuja",
+    "city": "Abuja",
+    "state": "FCT",
+    "bedrooms": null,
+    "bathrooms": null,
+    "status": "available",
+    "images": null,
+    "documents": null,
+    "featured": false
+  },
+  {
+    "title": "Ibiza Residence",
+    "slug": "ibiza-residence",
+    "property_type": "land",
+    "estate": null,
+    "plot_number": null,
+    "size_sqm_options": [
+      { "size_sqm": 200, "price": 7500000 },
+      { "size_sqm": 300, "price": 10000000 },
+      { "size_sqm": 600, "price": 20000000 }
+    ],
+    "location": "Idu, Abuja",
+    "city": "Abuja",
+    "state": "FCT",
+    "bedrooms": null,
+    "bathrooms": null,
+    "status": "available",
+    "images": null,
+    "documents": null,
+    "featured": false
+  },
+  {
+    "title": "Beechwood Residence",
+    "slug": "beechwood-residence",
+    "property_type": "land",
+    "estate": null,
+    "plot_number": null,
+    "size_sqm_options": [
+      { "size_sqm": 200, "price": 3200000 },
+      { "size_sqm": 300, "price": 4500000 },
+      { "size_sqm": 600, "price": 7200000 }
+    ],
+    "location": "Kuje, Abuja",
+    "city": "Abuja",
+    "state": "FCT",
+    "bedrooms": null,
+    "bathrooms": null,
+    "status": "available",
+    "images": null,
+    "documents": null,
+    "featured": false
+  },
+  {
+    "title": "Gidan Residency",
+    "slug": "gidan-residency",
+    "property_type": "land",
+    "estate": null,
+    "plot_number": null,
+    "size_sqm_options": [
+      { "size_sqm": 200, "price": 13000000 },
+      { "size_sqm": 300, "price": 18000000 },
+      { "size_sqm": 600, "price": 30000000 }
+    ],
+    "location": "Hutu, Abuja",
+    "city": "Abuja",
+    "state": "FCT",
+    "bedrooms": null,
+    "bathrooms": null,
+    "status": "available",
+    "images": null,
+    "documents": null,
+    "featured": false
+  },
+  {
+    "title": "The Cove Residence",
+    "slug": "the-cove-residence",
+    "property_type": "land",
+    "estate": null,
+    "plot_number": null,
+    "size_sqm_options": [
+      { "size_sqm": 200, "price": 28999000 },
+      { "size_sqm": 300, "price": 42999000 },
+      { "size_sqm": 600, "price": 67999000 }
+    ],
+    "location": "Katampe Extension, Abuja",
+    "city": "Abuja",
+    "state": "FCT",
+    "bedrooms": null,
+    "bathrooms": null,
+    "status": "available",
+    "images": null,
+    "documents": null,
+    "featured": false
+  }
+]
+

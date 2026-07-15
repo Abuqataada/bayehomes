@@ -1,0 +1,87 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Admin Dashboard – Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">Dashboard</h4>
+        <span class="text-muted small">Welcome, {{ current_user.get_full_name() }}</span>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="card bg-primary text-white shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-building fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ property_count }}</h3>
+                    <p class="mb-0 small">Total Properties</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card bg-info text-white shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-envelope fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ message_count }}</h3>
+                    <p class="mb-0 small">Unread Messages</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card bg-success text-white shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-blog fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ blog_count }}</h3>
+                    <p class="mb-0 small">Blog Posts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card bg-warning text-dark shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x mb-2"></i>
+                    <h3 class="fw-bold">{{ staff_count }}</h3>
+                    <p class="mb-0 small">Staff Members</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Action Cards -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 hover-lift">
+                <div class="card-body text-center">
+                    <i class="fas fa-plus-circle fa-3x text-success mb-3"></i>
+                    <h5 class="fw-bold">Add Property</h5>
+                    <p class="text-muted small">List a new property for sale</p>
+                    <a href="{{ url_for('property_mgmt.add_property') }}" class="btn btn-outline-success rounded-pill">Go →</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 hover-lift">
+                <div class="card-body text-center">
+                    <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+                    <h5 class="fw-bold">Manage Properties</h5>
+                    <p class="text-muted small">Edit or remove existing listings</p>
+                    <a href="{{ url_for('property_mgmt.property_list') }}" class="btn btn-outline-primary rounded-pill">Go →</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 hover-lift">
+                <div class="card-body text-center">
+                    <i class="fas fa-comment-dots fa-3x text-warning mb-3"></i>
+                    <h5 class="fw-bold">View Messages</h5>
+                    <p class="text-muted small">Check contact inquiries</p>
+                    <a href="{{ url_for('admin.messages') }}" class="btn btn-outline-warning rounded-pill">Go →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

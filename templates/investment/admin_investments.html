@@ -1,0 +1,70 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Investments - Admin - Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">Investments</h4>
+        <div class="d-flex gap-2">
+            <form method="POST" action="{{ url_for('investment.trigger_roi_calculation') }}" class="m-0">
+                <button type="submit" class="btn btn-success rounded-pill">
+                    <i class="fas fa-calculator me-2"></i> Calculate ROI
+                </button>
+            </form>
+            <a href="{{ url_for('investment.admin_reports') }}" class="btn btn-outline-success rounded-pill">
+                Reports
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Investment</th>
+                            <th>Investor</th>
+                            <th>Package</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>ROI Earned</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inv in investments %}
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">{{ inv.id }}</div>
+                                </td>
+                                <td>{{ inv.investor_id }}</td>
+                                <td>{{ inv.package_id }}</td>
+                                <td>{{ inv.amount }}</td>
+                                <td>
+                                    <span class="badge {{ 'bg-success' if inv.status=='active' else 'bg-secondary' }}">{{ inv.status }}</span>
+                                </td>
+                                <td>{{ inv.roi_earned }}</td>
+                                <td>{{ inv.start_date.strftime('%Y-%m-%d') if inv.start_date else '' }}</td>
+                                <td>{{ inv.end_date.strftime('%Y-%m-%d') if inv.end_date else '' }}</td>
+                                <td class="text-end">
+                                    <!-- Placeholder: actions can be added once admin UX is defined -->
+                                    <a class="btn btn-sm btn-outline-secondary rounded-pill" href="{{ url_for('investment.admin_reports') }}">View</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="9" class="text-center text-muted py-5">No investments found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

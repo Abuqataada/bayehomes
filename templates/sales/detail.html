@@ -1,0 +1,133 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Sale Detail – Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold mb-0">Sale Detail</h4>
+        <div class="text-muted small">{{ sale.id }}</div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="text-muted small">Customer ID</div>
+                            <div class="fw-semibold">{{ sale.customer_id }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-muted small">Property ID</div>
+                            <div class="fw-semibold">{{ sale.property_id }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-muted small">Total</div>
+                            <div class="fw-semibold">{{ sale.total_amount }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-muted small">Paid</div>
+                            <div class="fw-semibold">{{ sale.amount_paid }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-muted small">Balance</div>
+                            <div class="fw-semibold">{{ sale.balance }}</div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h6 class="fw-semibold mb-3">Invoices</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Issued</th>
+                                    <th>Total</th>
+                                    <th>Balance Due</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for inv in invoices %}
+                                    <tr>
+                                        <td>{{ inv.invoice_number }}</td>
+                                        <td>{{ inv.issued_date.strftime('%Y-%m-%d') if inv.issued_date else '' }}</td>
+                                        <td>{{ inv.total }}</td>
+                                        <td>{{ inv.balance_due }}</td>
+                                        <td>{{ inv.status }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr><td colspan="5" class="text-center text-muted py-4">No invoices.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-3">Record Payment</h6>
+                    <form method="POST" action="{{ url_for('sales.record_payment', sale_id=sale.id) }}">
+                        {{ payment_form.hidden_tag() if payment_form }}
+
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            {{ payment_form.amount(class="form-control", step="0.01") }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Method</label>
+                            {{ payment_form.method(class="form-select") }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Reference</label>
+                            {{ payment_form.reference(class="form-control") }}
+                        </div>
+
+                        <button type="submit" class="btn btn-success rounded-pill w-100">
+                            <i class="fas fa-paper-plane me-2"></i> Submit Payment
+                        </button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h6 class="fw-semibold mb-3">Payments</h6>
+                    <div>
+                        {% for p in payments %}
+                            <div class="border rounded-3 p-3 mb-2">
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <div>
+                                        <div class="fw-semibold">{{ p.amount }}</div>
+                                        <div class="text-muted small">{{ p.payment_date.strftime('%Y-%m-%d') if p.payment_date else '' }} • {{ p.method }}</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge {{ 'bg-success' if p.status=='verified' else 'bg-warning text-dark' }}">{{ p.status }}</span>
+                                    </div>
+                                </div>
+
+                                {% if p.reference %}
+                                    <div class="text-muted small mt-2">Ref: {{ p.reference }}</div>
+                                {% endif %}
+
+                                {% if p.status != 'verified' %}
+                                    <form method="POST" action="{{ url_for('sales.verify_payment', payment_id=p.id) }}" class="mt-2">
+                                        <button type="submit" class="btn btn-sm btn-outline-success rounded-pill w-100">Verify</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="text-muted">No payments yet.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

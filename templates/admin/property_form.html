@@ -1,0 +1,97 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ 'Edit' if property else 'Add' }} Property</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <label>Title</label>
+                    <input type="text" name="title" class="form-control" value="{{ property.title if property else '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Property Type</label>
+                    <select name="property_type" class="form-select" required>
+                        <option value="land" {% if property and property.property_type=='land' %}selected{% endif %}>Land</option>
+                        <option value="building" {% if property and property.property_type=='building' %}selected{% endif %}>Building</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Description</label>
+                    <textarea name="description" rows="5" class="form-control">{{ property.description if property else '' }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label>Price (₦)</label>
+                    <input type="number" step="0.01" name="price" class="form-control" value="{{ property.price if property else '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Location</label>
+                    <input type="text" name="location" class="form-control" value="{{ property.location if property else '' }}" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Land Area (sqm)</label>
+                        <input type="number" step="0.01" name="land_area_sqm" class="form-control" value="{{ property.land_area_sqm if property else '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Bedrooms</label>
+                        <input type="number" name="bedrooms" class="form-control" value="{{ property.bedrooms if property else '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Bathrooms</label>
+                        <input type="number" name="bathrooms" class="form-control" value="{{ property.bathrooms if property else '' }}">
+                    </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="featured" class="form-check-input" {% if property and property.featured %}checked{% endif %}>
+                    <label class="form-check-label">Featured Property</label>
+                </div>
+
+                <div class="mb-3">
+                    <label>Status</label>
+                    <select name="status" class="form-select">
+                        <option value="available" {% if property and property.status=='available' %}selected{% endif %}>Available</option>
+                        <option value="sold" {% if property and property.status=='sold' %}selected{% endif %}>Sold</option>
+                        <option value="reserved" {% if property and property.status=='reserved' %}selected{% endif %}>Reserved</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Upload Images</label>
+                    <input type="file" name="images" multiple class="form-control" accept="image/*">
+                    <small class="text-muted">You can upload multiple images.</small>
+                </div>
+
+                {% if property and property.images %}
+                    <div class="mb-3">
+                        <label>Current Images</label>
+                        <div class="row">
+                            {% for img in property.images %}
+                                <div class="col-md-3 mb-2">
+                                    <img src="{{ url_for('static', filename='uploads/properties/' + img) }}" class="img-thumbnail" width="100">
+                                    <div class="form-check mt-1">
+                                        <input class="form-check-input" type="checkbox" name="delete_images" value="{{ img }}">
+                                        <label class="form-check-label">Delete</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Property</button>
+        <a href="{{ url_for('admin.properties') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+

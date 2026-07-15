@@ -1,0 +1,61 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Testimonials - Baye Homes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold mb-0">Testimonials</h3>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Client</th>
+                            <th>Role</th>
+                            <th>Rating</th>
+                            <th>Published</th>
+                            <th>Content</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in testimonials %}
+                            <tr>
+                                <td class="fw-semibold">{{ t.client_name }}</td>
+                                <td>{{ t.client_role or '—' }}</td>
+                                <td>
+                                    <span class="badge bg-success">{{ t.rating }}/5</span>
+                                </td>
+                                <td>
+                                    {% if t.is_published %}
+                                        <span class="badge bg-success">Yes</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">No</span>
+                                    {% endif %}
+                                </td>
+                                <td style="max-width:420px;">
+                                    <div class="text-muted small" style="white-space: pre-wrap;">{{ t.content }}</div>
+                                </td>
+                                <td class="text-end">
+                                    <form action="{{ url_for('admin.delete_testimonial', id=t.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Delete this testimonial?');">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-5">No testimonials found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

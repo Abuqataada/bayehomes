@@ -1,0 +1,75 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Properties – Baye Homes{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">Properties</h4>
+    <a href="{{ url_for('property_mgmt.add_property') }}" class="btn btn-success rounded-pill">
+        Add Property
+    </a>
+</div>
+
+<!-- Filter Form -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">{{ form.search(class='form-control', placeholder='Search') }}</div>
+            <div class="col-md-2">{{ form.status(class='form-select') }}</div>
+            <div class="col-md-2">{{ form.property_type(class='form-select') }}</div>
+            <div class="col-md-3">{{ form.estate(class='form-control', placeholder='Estate') }}</div>
+            <div class="col-md-2">
+                <button class="btn btn-outline-success w-100">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Properties Table -->
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Staff</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for property in properties %}
+                <tr>
+                    <td>{{ property.title }}</td>
+                    <td>{{ property.property_type|capitalize }}</td>
+                    <td>{{ property.location }}</td>
+                    <td>₦{{ "{:,.2f}".format(property.price) }}</td>
+                    <td>
+                        {{ property.status.value.replace('_',' ')|title if property.status.value is defined else property.status }}
+                    </td>
+                    <td>
+                        {{ property.assigned_staff.get_full_name() if property.assigned_staff else 'Unassigned' }}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('property_mgmt.edit_property', property_id=property.id) }}" class="btn btn-sm btn-outline-success">Edit</a>
+                        <!-- Delete Form with Confirmation -->
+                        <form method="POST" action="{{ url_for('property_mgmt.delete_property', property_id=property.id) }}" style="display:inline;" 
+                              onsubmit="return confirm('Are you sure you want to delete this property? This action cannot be undone.');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">No properties found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
