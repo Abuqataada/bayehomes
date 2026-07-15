@@ -1,0 +1,125 @@
+# ---------------------------
+# Python & Virtual Environment
+# ---------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.dll
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+venv/
+env/
+ENV/
+.venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+
+# ---------------------------
+# Flask / Web App
+# ---------------------------
+instance/
+.webassets-cache
+.env
+.flaskenv
+*.db
+*.sqlite
+*.sqlite3
+
+# ---------------------------
+# Sensitive Data / Environment
+# ---------------------------
+.env
+.env.local
+.env.production
+.env.development
+*.pem
+*.key
+*.crt
+secrets/
+credentials/
+config.local.py
+
+# ---------------------------
+# Supabase / Database
+# ---------------------------
+*.backup
+*.dump
+supabase/.temp/
+supabase/seed.sql   # if you don't want to version seed data
+
+# ---------------------------
+# Uploads & Static Files
+# ---------------------------
+media/
+uploads/
+*.log
+logs/
+*.pid
+
+# ---------------------------
+# IDE / Editor
+# ---------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.tmproj
+*.sublime-*
+/.idea/
+/workspace.xml
+/.vscode/
+/*.iml
+
+# ---------------------------
+# OS / System
+# ---------------------------
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+*.tmp
+*.temp
+
+# ---------------------------
+# PyInstaller / Bundled EXE
+# ---------------------------
+*.exe
+*.spec
+build/
+dist/
+*.manifest
+
+# ---------------------------
+# Docker (if used)
+# ---------------------------
+.dockerignore
+docker-compose.override.yml
+*.container
+
