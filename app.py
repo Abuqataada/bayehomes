@@ -16,6 +16,10 @@ from blueprints.auth import auth_bp
 from blueprints.property_mgmt import property_mgmt_bp
 import dotenv
 
+from flask_pymongo import PyMongo
+
+mongo = PyMongo()   
+
 dotenv.load_dotenv()
 
 def create_app():
@@ -28,8 +32,7 @@ def create_app():
     login_manager.init_app(app)
     mail.init_app(app)
     
-    # Initialize Supabase
-    init_supabase(app)
+    mongo.init_app(app)
     
     @login_manager.user_loader
     def load_user(user_id):

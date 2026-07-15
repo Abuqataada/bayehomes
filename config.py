@@ -16,8 +16,8 @@ class Config:
     }
     
     # Supabase Configuration
-    SUPABASE_URL = os.environ.get('SUPABASE_URL')
-    SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+    SUPABASE_URL = os.environ.get('SUPABASE_URL', '')
+    SUPABASE_KEY = os.environ.get('SUPABASE_KEY', '')
     
     # Upload folders
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'static/uploads/properties')

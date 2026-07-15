@@ -17,4 +17,6 @@ def init_supabase(app):
         app.config['SUPABASE_KEY']
     )
     
+    print("DB instance created successfully")
+    
     
