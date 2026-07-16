@@ -9,6 +9,3 @@ email-validator
 Pillow
 psycopg2-binary
 openpyxl
-supabase
-pymongo
-flask-pymongo

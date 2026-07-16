@@ -3,7 +3,6 @@ from flask import Flask
 from config import Config
 from extensions import db, migrate, login_manager, mail
 from models import User, UserRole
-from supabase_client import init_supabase, get_supabase  # new import
 from blueprints.public import public_bp
 from blueprints.admin import admin_bp
 from blueprints.staff import staff_bp
@@ -16,10 +15,6 @@ from blueprints.auth import auth_bp
 from blueprints.property_mgmt import property_mgmt_bp
 import dotenv
 
-from flask_pymongo import PyMongo
-
-mongo = PyMongo()   
-
 dotenv.load_dotenv()
 
 def create_app():
@@ -31,8 +26,6 @@ def create_app():
     migrate.init_app(app, db)
     login_manager.init_app(app)
     mail.init_app(app)
-    
-    mongo.init_app(app)
     
     @login_manager.user_loader
     def load_user(user_id):
@@ -50,9 +43,6 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(property_mgmt_bp)
     
-    # Create upload folders
-    #os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    #os.makedirs(app.config['BLOG_UPLOAD_FOLDER'], exist_ok=True)
     
     return app
 
