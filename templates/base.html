@@ -504,7 +504,7 @@
     <div class="modal fade" id="feedbackModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title"><i class="bi bi-chat-dots"></i> Send Feedback</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -538,7 +538,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Send Feedback</button>
+                        <button type="submit" class="btn bg-success text-white">Send Feedback</button>
                     </div>
                 </form>
             </div>
@@ -584,18 +584,24 @@
                 }
             });
 
-            // Scroll effects
+            // Scroll effects with null checks
             function onScroll() {
-                navbar.classList.toggle('is-scrolled', window.scrollY > 40);
-                backToTop.classList.toggle('is-visible', window.scrollY > 400);
+                if (navbar) {
+                    navbar.classList.toggle('is-scrolled', window.scrollY > 40);
+                }
+                if (backToTop) {
+                    backToTop.classList.toggle('is-visible', window.scrollY > 400);
+                }
             }
             window.addEventListener('scroll', onScroll, { passive: true });
-            onScroll();
+            onScroll(); // initial call
 
             // Feedback modal
             var feedbackBtn = document.getElementById('feedbackBtn');
-            var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-            feedbackBtn.addEventListener('click', function () { feedbackModal.show(); });
+            if (feedbackBtn) {
+                var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+                feedbackBtn.addEventListener('click', function () { feedbackModal.show(); });
+            }
 
             // Rating stars
             document.querySelectorAll('.rating-stars i').forEach(function (star) {
@@ -614,33 +620,37 @@
             });
 
             // Submit feedback via AJAX
-            document.getElementById('feedbackForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                var data = Object.fromEntries(formData);
+            var feedbackForm = document.getElementById('feedbackForm');
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var formData = new FormData(this);
+                    var data = Object.fromEntries(formData);
 
-                fetch('{{ url_for('feedback.submit_feedback') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(function (response) { return response.json(); })
-                .then(function (result) {
-                    if (result.success) {
-                        alert('Thank you for your feedback! 🙏');
-                        feedbackModal.hide();
-                        document.getElementById('feedbackForm').reset();
-                    } else {
-                        alert('Error: ' + JSON.stringify(result.errors));
-                    }
-                })
-                .catch(function () {
-                    alert('Failed to send feedback. Please try again.');
+                    fetch('{{ url_for('feedback.submit_feedback') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(function (response) { return response.json(); })
+                    .then(function (result) {
+                        if (result.success) {
+                            alert('Thank you for your feedback! 🙏');
+                            var modal = bootstrap.Modal.getInstance(document.getElementById('feedbackModal'));
+                            if (modal) modal.hide();
+                            document.getElementById('feedbackForm').reset();
+                        } else {
+                            alert('Error: ' + JSON.stringify(result.errors));
+                        }
+                    })
+                    .catch(function () {
+                        alert('Failed to send feedback. Please try again.');
+                    });
                 });
-            });
+            }
 
             // Chatbot
             var chatbotToggle = document.getElementById('chatbotToggle');
@@ -651,6 +661,7 @@
             var chatbotMessages = document.getElementById('chatbotMessages');
 
             function addChatMessage(text, type) {
+                if (!chatbotMessages) return;
                 var bubble = document.createElement('div');
                 bubble.className = 'chatbot-message ' + type;
                 bubble.textContent = text;
@@ -658,33 +669,38 @@
                 chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             }
 
-            chatbotToggle.addEventListener('click', function () {
-                chatbotPanel.classList.toggle('is-open');
-            });
-            chatbotClose.addEventListener('click', function () {
-                chatbotPanel.classList.remove('is-open');
-            });
-
-            chatbotForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-                var message = chatbotInput.value.trim();
-                if (!message) return;
-                addChatMessage(message, 'user');
-                chatbotInput.value = '';
-
-                fetch('{{ url_for('public.chatbot') }}', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
-                })
-                .then(function (response) { return response.json(); })
-                .then(function (data) {
-                    addChatMessage(data.reply || 'Please contact +234 812 846 6760 for help.', 'bot');
-                })
-                .catch(function () {
-                    addChatMessage('I could not connect right now. Please WhatsApp +234 812 846 6760.', 'bot');
+            if (chatbotToggle && chatbotPanel) {
+                chatbotToggle.addEventListener('click', function () {
+                    chatbotPanel.classList.toggle('is-open');
                 });
-            });
+            }
+            if (chatbotClose && chatbotPanel) {
+                chatbotClose.addEventListener('click', function () {
+                    chatbotPanel.classList.remove('is-open');
+                });
+            }
+            if (chatbotForm && chatbotInput && chatbotMessages) {
+                chatbotForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var message = chatbotInput.value.trim();
+                    if (!message) return;
+                    addChatMessage(message, 'user');
+                    chatbotInput.value = '';
+
+                    fetch('{{ url_for('public.chatbot') }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: message })
+                    })
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        addChatMessage(data.reply || 'Please contact +234 812 846 6760 for help.', 'bot');
+                    })
+                    .catch(function () {
+                        addChatMessage('I could not connect right now. Please WhatsApp +234 812 846 6760.', 'bot');
+                    });
+                });
+            }
 
             // Animated counters
             var counters = document.querySelectorAll('[data-counter]');
