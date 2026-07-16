@@ -19,6 +19,8 @@ class Config:
         }
     }
     
+    WTF_CSRF_ENABLED = False
+    
     # Supabase Configuration
     SUPABASE_URL = os.environ.get('SUPABASE_URL', '')
     SUPABASE_KEY = os.environ.get('SUPABASE_KEY', '')

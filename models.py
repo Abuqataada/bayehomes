@@ -637,3 +637,39 @@ class Document(db.Model):
     )
     
     
+    
+class VisitorFeedback(db.Model):
+    __tablename__ = 'visitor_feedback'
+
+    id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120))
+    message = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, default=5)  # 1-5 stars
+    
+    # Location data (auto-detected)
+    ip_address = db.Column(db.String(45))
+    city = db.Column(db.String(100))
+    region = db.Column(db.String(100))
+    country = db.Column(db.String(100))
+    country_code = db.Column(db.String(2))
+    latitude = db.Column(db.Numeric(10, 7))
+    longitude = db.Column(db.Numeric(10, 7))
+    user_timezone = db.Column(db.String(50))
+    isp = db.Column(db.String(100))
+    
+    # Status
+    is_read = db.Column(db.Boolean, default=False)
+    is_resolved = db.Column(db.Boolean, default=False)
+    
+    # Page context (where the feedback came from)
+    page_url = db.Column(db.String(255))
+    page_title = db.Column(db.String(200))
+    
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
+    
+    def __repr__(self):
+        return f'<VisitorFeedback {self.name}>'
+    
+    

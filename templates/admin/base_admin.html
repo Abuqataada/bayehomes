@@ -241,6 +241,11 @@
                 <i class="fas fa-building"></i> Properties
             </a>
 
+            <a class="nav-link" href="{{ url_for('feedback.list_feedback') }}">
+                <i class="fas fa-feedback"></i> Visitor Feedback
+                <span id="feedbackUnreadBadge" class="badge bg-danger float-end ms-2" style="display:none;"></span>
+            </a>
+
             <a class="nav-link {% if request.endpoint in ['admin.messages','admin.mark_read'] %}active{% endif %}" href="{{ url_for('admin.messages') }}">
                 <i class="fas fa-envelope"></i> Messages
             </a>
@@ -303,6 +308,30 @@
             sidebar.classList.remove('open');
         }
     });
+
+    // Fetch unread count
+    async function fetchUnreadFeedback() {
+        try {
+            const response = await fetch('/feedback/count', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await response.json();
+            const badge = document.getElementById('feedbackUnreadBadge');
+            if (badge) {
+                if (data.unread_count > 0) {
+                    badge.textContent = data.unread_count;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        } catch (e) {
+            console.error('Error fetching unread count:', e);
+        }
+    }
+    // Call on page load and every 30 seconds
+    fetchUnreadFeedback();
+    setInterval(fetchUnreadFeedback, 30000);
 </script>
 {% block extra_js %}{% endblock %}
 </body>

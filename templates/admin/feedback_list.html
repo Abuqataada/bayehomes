@@ -1,0 +1,188 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Visitor Feedback{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-chat-dots"></i> Visitor Feedback</h1>
+        <div>
+            <span class="badge bg-primary" id="unreadBadge">{{ feedbacks|selectattr('is_read', 'false')|list|length }} Unread</span>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Search name, email, message..." value="{{ search }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="all" {% if status == 'all' %}selected{% endif %}>All Feedback</option>
+                        <option value="unread" {% if status == 'unread' %}selected{% endif %}>Unread Only</option>
+                        <option value="resolved" {% if status == 'resolved' %}selected{% endif %}>Resolved</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+                <div class="col-md-3 text-end">
+                    <a href="{{ url_for('feedback.list_feedback') }}" class="btn btn-secondary">Clear Filters</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback List -->
+    {% if feedbacks %}
+    <div class="row">
+        {% for feedback in feedbacks %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 {% if not feedback.is_read %}border-primary{% endif %}">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ feedback.name }}</strong>
+                        {% if not feedback.is_read %}
+                        <span class="badge bg-primary ms-2">New</span>
+                        {% endif %}
+                        {% if feedback.is_resolved %}
+                        <span class="badge bg-success ms-2">Resolved</span>
+                        {% endif %}
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            {% if not feedback.is_read %}
+                            <li><button class="dropdown-item" onclick="markRead('{{ feedback.id }}')">
+                                <i class="bi bi-check-circle"></i> Mark Read
+                            </button></li>
+                            {% endif %}
+                            {% if not feedback.is_resolved %}
+                            <li><button class="dropdown-item" onclick="markResolved('{{ feedback.id }}')">
+                                <i class="bi bi-check2-all"></i> Mark Resolved
+                            </button></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item text-danger" onclick="deleteFeedback('{{ feedback.id }}')">
+                                <i class="bi bi-trash"></i> Delete
+                            </button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ feedback.message }}</p>
+                    
+                    <!-- Rating -->
+                    <div class="mb-2">
+                        {% for i in range(1, 6) %}
+                        <i class="bi bi-star{% if i <= feedback.rating %}-fill text-warning{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Contact -->
+                    {% if feedback.email %}
+                    <p><i class="bi bi-envelope"></i> <a href="mailto:{{ feedback.email }}">{{ feedback.email }}</a></p>
+                    {% endif %}
+
+                    <!-- Location Info -->
+                    <div class="mt-2 text-muted small">
+                        <p class="mb-0">
+                            <i class="bi bi-geo-alt"></i>
+                            {% if feedback.city and feedback.country %}
+                                {{ feedback.city }}, {{ feedback.country }}
+                            {% elif feedback.country %}
+                                {{ feedback.country }}
+                            {% else %}
+                                Unknown location
+                            {% endif %}
+                            {% if feedback.latitude and feedback.longitude %}
+                            <br><i class="bi bi-map"></i> Lat: {{ feedback.latitude }}, Lng: {{ feedback.longitude }}
+                            {% endif %}
+                            <br><i class="bi bi-globe2"></i> ISP: {{ feedback.isp or 'Unknown' }}
+                        </p>
+                    </div>
+                    
+                    <!-- Page Context -->
+                    {% if feedback.page_url %}
+                    <div class="mt-2 small">
+                        <i class="bi bi-link"></i> 
+                        <a href="{{ feedback.page_url }}" target="_blank">{{ feedback.page_title or feedback.page_url }}</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-muted small">
+                    <i class="bi bi-clock"></i> {{ feedback.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    <span class="float-end"><i class="bi bi-ip"></i> {{ feedback.ip_address }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-inbox display-1 text-muted"></i>
+        <p class="text-muted mt-3">No feedback entries found.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function markRead(id) {
+    if (!confirm('Mark this feedback as read?')) return;
+    fetch(`/feedback/${id}/read`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function markResolved(id) {
+    if (!confirm('Mark this feedback as resolved?')) return;
+    fetch(`/feedback/${id}/resolve`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function deleteFeedback(id) {
+    if (!confirm('Delete this feedback permanently?')) return;
+    fetch(`/feedback/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}

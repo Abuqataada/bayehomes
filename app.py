@@ -13,6 +13,7 @@ from blueprints.sales import sales_bp
 from blueprints.investment import investment_bp
 from blueprints.auth import auth_bp
 from blueprints.property_mgmt import property_mgmt_bp
+from blueprints.feedback import feedback_bp
 import dotenv
 
 dotenv.load_dotenv()
@@ -42,6 +43,7 @@ def create_app():
     app.register_blueprint(investment_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(property_mgmt_bp)
+    app.register_blueprint(feedback_bp, url_prefix='/feedback')
     
     
     return app
