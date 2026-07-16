@@ -10,4 +10,4 @@ email-validator
 Pillow
 openpyxl
 requests
-psycopg2-binary==2.9.10
+pymysql
