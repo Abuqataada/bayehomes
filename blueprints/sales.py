@@ -286,6 +286,8 @@ def download_receipt(receipt_id):
 # Dashboard / Reports
 # ------------------------------
 
+from sqlalchemy import text
+
 @sales_bp.route('/reports')
 @login_required
 @role_required(['admin', 'staff'])
@@ -296,22 +298,25 @@ def reports():
     total_verified_payments = db.session.query(func.sum(Payment.amount)).filter(Payment.status == 'verified').scalar() or 0
     outstanding = total_revenue - total_verified_payments
 
-    # Monthly revenue (current year) - SQLite compatible (no month()/year() functions)
+    # Monthly revenue (current year) – MySQL compatible
     current_year = datetime.now(timezone.utc).year
-    month_expr = func.cast(func.strftime('%m', Sale.sale_date), db.Integer)
-    monthly_revenue = db.session.query(
-        month_expr.label('month'),
-        func.sum(Sale.total_amount).label('revenue')
-    ).filter(func.strftime('%Y', Sale.sale_date) == str(current_year)) \
-     .group_by(month_expr) \
-     .order_by(month_expr) \
-     .all()
+    monthly_revenue = db.session.execute(
+        text("""
+            SELECT MONTH(sale_date) AS month, SUM(total_amount) AS revenue
+            FROM sales
+            WHERE YEAR(sale_date) = :year
+            GROUP BY MONTH(sale_date)
+            ORDER BY MONTH(sale_date)
+        """),
+        {"year": current_year}
+    ).fetchall()
 
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    revenue_data = [0]*12
-    for m in monthly_revenue:
-        revenue_data[m.month-1] = float(m.revenue)
-        
+    revenue_data = [0] * 12
+    for row in monthly_revenue:
+        revenue_data[row.month - 1] = float(row.revenue)
+
+    # Staff daily reports (unchanged)
     reports = StaffDailyReport.query.all()
 
     return render_template('sales/reports.html',
@@ -322,7 +327,7 @@ def reports():
                            months=months,
                            revenue_data=revenue_data,
                            reports=reports)
-
+    
 # ------------------------------
 # Export Sales (CSV)
 # ------------------------------
