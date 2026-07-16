@@ -54,6 +54,10 @@
             padding-top: 76px;
             overflow-x: hidden;
         }
+        main img, main video, main iframe, main table {
+            max-width: 100%;
+        }
+        main table { display: block; overflow-x: auto; }
         @media (max-width: 991.98px) {
             body { padding-top: 64px; }
         }
@@ -125,6 +129,17 @@
         .navbar .nav-link:hover::after,
         .navbar .nav-link.active::after {
             width: 100%;
+        }
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                max-height: calc(100vh - 64px);
+                overflow-y: auto;
+            }
+            .navbar-nav .nav-link {
+                padding-top: .6rem;
+                padding-bottom: .6rem;
+            }
+            .navbar .nav-link::after { display: none; }
         }
 
         /* ---------- HOVER LIFT ---------- */
@@ -408,11 +423,11 @@
     <footer class="bg-dark text-white pt-5 pb-4 mt-5" data-aos="fade-up" data-aos-duration="600">
         <div class="container">
             <div class="row gy-4">
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <h5 class="fw-bold mb-3">About</h5>
                     <p class="text-white-50 small">Baye Homes is a trusted real estate company in Abuja, dedicated to providing secure landed properties, quality building projects, and expert consultancy for investors and homeowners.</p>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <h5 class="fw-bold mb-3">Easy Links</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="{{ url_for('public.about') }}" class="text-white-50 text-decoration-none">About Us</a></li>
@@ -421,7 +436,7 @@
                         <li class="mb-2"><a href="{{ url_for('public.contact') }}" class="text-white-50 text-decoration-none">Contact Us</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3">
+                <div class="col-6 col-md-3">
                     <h5 class="fw-bold mb-3">Quick Links</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Support</a></li>
@@ -430,7 +445,7 @@
                         <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">FAQ</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <h5 class="fw-bold mb-3">Contact</h5>
                     <p class="mb-1"><i class="fas fa-phone me-2"></i> +234 812 846 6760</p>
                     <p class="mb-3"><i class="fas fa-envelope me-2"></i> contact@bayehomes.com</p>
@@ -471,7 +486,7 @@
          FEEDBACK MODAL
     ============================================================ -->
     <div class="modal fade" id="feedbackModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title"><i class="bi bi-chat-dots"></i> Send Feedback</h5>
