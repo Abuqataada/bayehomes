@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="description" content="{% block meta_description %}Baye Homes is Abuja's trusted real estate company for verified land, buildings, investment properties, and property consultancy.{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}Baye Homes, Abuja real estate, land for sale in Abuja, houses for sale in Abuja, property investment Nigeria{% endblock %}">
     <meta name="robots" content="index, follow">
@@ -30,18 +30,15 @@
     }
     </script>
     <title>Baye Homes - {% block title %}Your Real Estate Partner{% endblock %}</title>
-    
-    <!-- External Libraries (CSS only) -->
+
+    <!-- External Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-    <!-- ============================================================
-         ALL CUSTOM CSS – merged from style.css + motion layer
-    ============================================================ -->
     <style>
-        /* ---------- GLOBAL VARIABLES (consistent with brand) ---------- */
+        /* ---------- GLOBAL VARIABLES ---------- */
         :root {
             --bh-deep:    #0a2a24;
             --bh-deep-2:  #1a4a3e;
@@ -51,10 +48,8 @@
             --bh-ease: cubic-bezier(.22, .61, .36, 1);
         }
 
-        /* ---------- BASE & UTILITY ---------- */
-        html {
-            scroll-behavior: smooth;
-        }
+        /* ---------- BASE ---------- */
+        html { scroll-behavior: smooth; }
         body {
             padding-top: 76px;
             overflow-x: hidden;
@@ -71,14 +66,12 @@
             }
         }
 
-        /* ---------- BUTTON & COLOR OVERRIDES (from style.css) ---------- */
+        /* ---------- BUTTONS ---------- */
         .btn-success, .bg-success {
             background-color: var(--bh-green) !important;
             border-color: var(--bh-green) !important;
         }
-        .text-success {
-            color: var(--bh-green) !important;
-        }
+        .text-success { color: var(--bh-green) !important; }
         .btn-outline-success {
             color: var(--bh-green);
             border-color: var(--bh-green);
@@ -96,7 +89,7 @@
             border-color: rgba(4,171,94,0.25);
         }
 
-        /* ---------- NAVBAR (motion layer) ---------- */
+        /* ---------- NAVBAR ---------- */
         .navbar {
             transition: box-shadow 0.35s var(--bh-ease), padding 0.35s var(--bh-ease);
             padding-top: .85rem;
@@ -110,9 +103,7 @@
         .navbar-brand img {
             transition: transform 0.35s var(--bh-ease);
         }
-        .navbar-brand:hover img {
-            transform: scale(1.05);
-        }
+        .navbar-brand:hover img { transform: scale(1.05); }
         .navbar .nav-link {
             position: relative;
             transition: color 0.25s var(--bh-ease);
@@ -136,7 +127,7 @@
             width: 100%;
         }
 
-        /* ---------- HOVER LIFT & ICON POP ---------- */
+        /* ---------- HOVER LIFT ---------- */
         .hover-lift {
             transition: transform 0.4s var(--bh-ease), box-shadow 0.4s var(--bh-ease);
             will-change: transform;
@@ -154,7 +145,7 @@
             transform: scale(1.15) rotate(-6deg);
         }
 
-        /* ---------- BUTTON ANIMATIONS (lift) ---------- */
+        /* ---------- BUTTON ANIMATIONS ---------- */
         .btn-success,
         .btn-outline-success {
             transition: transform 0.3s var(--bh-ease), box-shadow 0.3s var(--bh-ease), background-color 0.3s var(--bh-ease);
@@ -167,25 +158,21 @@
             transform: translateY(-3px);
         }
 
-        /* ---------- FLUID TYPOGRAPHY ---------- */
+        /* ---------- TYPOGRAPHY ---------- */
         .display-4 { font-size: clamp(1.9rem, 5vw + 0.5rem, 3.5rem); }
         .display-5 { font-size: clamp(1.6rem, 4vw + 0.5rem, 2.75rem); }
 
-        /* ---------- PROPERTY CARD (from style.css) ---------- */
-        .property-card {
-            transition: transform 0.3s;
-        }
+        /* ---------- PROPERTY CARD ---------- */
+        .property-card { transition: transform 0.3s; }
         .property-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        /* ---------- HERO SECTION OFFSET (if used) ---------- */
-        .hero-section {
-            margin-top: -76px;
-        }
+        /* ---------- HERO SECTION OFFSET ---------- */
+        .hero-section { margin-top: -76px; }
 
-        /* ---------- BACK TO TOP BUTTON (motion layer) ---------- */
+        /* ---------- BACK TO TOP ---------- */
         .back-to-top {
             position: fixed;
             right: 30px;
@@ -215,90 +202,57 @@
             visibility: visible;
             transform: translateY(0);
         }
-        @media (max-width: 575.98px) {
-            .back-to-top {
-                right: 18px;
-                bottom: 90px;
-                width: 42px;
-                height: 42px;
-            }
-        }
 
-        /* ---------- FLOATING BUTTONS STACK (feedback top, chatbot middle, WhatsApp bottom) ---------- */
-        .feedback-float {
+        /* ---------- FLOATING BUTTONS ---------- */
+        .feedback-float,
+        .chatbot-float,
+        .whatsapp-float {
             position: fixed;
-            bottom: 150px;
             right: 20px;
             width: 55px;
             height: 55px;
             border-radius: 50%;
-            background: var(--bh-deep);
-            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             z-index: 999;
-            border: none;
             transition: transform 0.3s, background-color 0.3s;
             cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .feedback-float {
+            bottom: 150px;
+            background: var(--bh-deep);
+            color: #fff;
         }
         .feedback-float:hover {
             background: var(--bh-green);
             transform: scale(1.08);
             color: #fff;
         }
-
         .chatbot-float {
-            position: fixed;
             bottom: 86px;
-            right: 20px;
-            width: 55px;
-            height: 55px;
-            border: 0;
-            border-radius: 50%;
             background: var(--bh-deep);
             color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 999;
-            transition: transform 0.3s, background-color 0.3s;
-            cursor: pointer;
         }
         .chatbot-float:hover {
             background: var(--bh-green);
             transform: scale(1.08);
             color: #fff;
         }
-
         .whatsapp-float {
-            position: fixed;
             bottom: 20px;
-            right: 20px;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
             background: #25d366;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 999;
-            text-decoration: none;
-            transition: transform 0.3s, background-color 0.3s;
         }
         .whatsapp-float:hover {
             background: #128C7E;
             transform: scale(1.08);
             color: white;
         }
-        /* Pulse ring for WhatsApp */
         .whatsapp-float::before {
             content: "";
             position: absolute;
@@ -355,6 +309,7 @@
 
         /* ---------- RESPONSIVE ---------- */
         @media (max-width: 576px) {
+            body { padding-top: 56px; }
             .feedback-float {
                 bottom: 130px;
                 right: 16px;
@@ -383,22 +338,29 @@
                 border-radius: 10px;
             }
             .chatbot-messages {
-                height: 240px;
-                padding: .85rem;
-                font-size: .95rem;
+                height: 220px;
+                padding: .75rem;
+                font-size: .9rem;
             }
             .chatbot-message {
                 max-width: 92%;
-                font-size: .93rem;
+                font-size: .9rem;
             }
             .back-to-top {
-                bottom: 80px;
                 right: 16px;
+                bottom: 80px;
+                width: 40px;
+                height: 40px;
+                font-size: .9rem;
             }
+            .hero-section { margin-top: -56px; }
+            .display-4 { font-size: 2rem; }
+            .display-5 { font-size: 1.6rem; }
         }
 
         @media (max-width: 420px) {
             .chatbot-panel { bottom: 120px; }
+            .feedback-float { bottom: 120px; }
         }
 
         /* ---------- FEEDBACK MODAL ---------- */
@@ -411,7 +373,7 @@
             color: #ffc107;
         }
 
-        /* ---------- ADDITIONAL BLOCK ---------- */
+        /* ---------- EXTRA ---------- */
         {% block extra_css %}{% endblock %}
     </style>
 </head>
@@ -487,25 +449,20 @@
     </footer>
 
     <!-- ============================================================
-         FLOATING BUTTONS – Stacked: Feedback (top), Chatbot (middle), WhatsApp (bottom)
+         FLOATING BUTTONS
     ============================================================ -->
-
-    <!-- 1. Feedback Button -->
     <button id="feedbackBtn" class="feedback-float" aria-label="Send feedback">
         <i class="fas fa-star"></i>
     </button>
 
-    <!-- 2. Chatbot Toggle -->
     <button type="button" class="chatbot-float" id="chatbotToggle" aria-label="Open Baye Homes chatbot">
         <i class="fas fa-comments"></i>
     </button>
 
-    <!-- 3. WhatsApp Button -->
     <a href="https://wa.me/2348128466760" class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Back to top -->
     <a href="#top" id="backToTop" class="back-to-top" aria-label="Back to top">
         <i class="fas fa-arrow-up"></i>
     </a>
@@ -580,9 +537,6 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-    <!-- ============================================================
-         GLOBAL BEHAVIOURS
-    ============================================================ -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 60 });
@@ -590,7 +544,7 @@
             var navbar = document.getElementById('mainNav');
             var backToTop = document.getElementById('backToTop');
 
-            // active link highlight
+            // Active link highlight
             var currentPath = window.location.pathname;
             document.querySelectorAll('#navbarNav .nav-link').forEach(function (link) {
                 var href = link.getAttribute('href');
@@ -599,7 +553,7 @@
                 }
             });
 
-            // scroll effects
+            // Scroll effects
             function onScroll() {
                 navbar.classList.toggle('is-scrolled', window.scrollY > 40);
                 backToTop.classList.toggle('is-visible', window.scrollY > 400);
@@ -607,13 +561,10 @@
             window.addEventListener('scroll', onScroll, { passive: true });
             onScroll();
 
-            // ========== FEEDBACK MODAL ==========
+            // Feedback modal
             var feedbackBtn = document.getElementById('feedbackBtn');
             var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-
-            feedbackBtn.addEventListener('click', function () {
-                feedbackModal.show();
-            });
+            feedbackBtn.addEventListener('click', function () { feedbackModal.show(); });
 
             // Rating stars
             document.querySelectorAll('.rating-stars i').forEach(function (star) {
@@ -631,7 +582,7 @@
                 });
             });
 
-            // Submit feedback via AJAX (CSRF exempt)
+            // Submit feedback via AJAX
             document.getElementById('feedbackForm').addEventListener('submit', function (e) {
                 e.preventDefault();
                 var formData = new FormData(this);
@@ -660,7 +611,7 @@
                 });
             });
 
-            // ========== CHATBOT ==========
+            // Chatbot
             var chatbotToggle = document.getElementById('chatbotToggle');
             var chatbotPanel = document.getElementById('chatbotPanel');
             var chatbotClose = document.getElementById('chatbotClose');
@@ -704,7 +655,7 @@
                 });
             });
 
-            // ========== ANIMATED COUNTERS ==========
+            // Animated counters
             var counters = document.querySelectorAll('[data-counter]');
             if (counters.length) {
                 var observer = new IntersectionObserver(function (entries, obs) {
