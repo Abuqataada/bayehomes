@@ -398,10 +398,30 @@
         </div>
         <div class="swiper testimonial-swiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide"><div class="card p-4 shadow-sm"><i class="fas fa-quote-left fa-2x text-success mb-3"></i><p>Owning land in Abuja always felt out of reach until I found Baye Homes. Their flexible payment plan made it possible for me to start small and grow. Today, I’m proud to say I’m a landowner in Kuje!</p><div class="text-warning mb-2">★★★★★</div><h6 class="mb-0">Chinonso A</h6><small class="text-muted">Civil Servant</small></div></div>
-                <div class="swiper-slide"><div class="card p-4 shadow-sm"><i class="fas fa-quote-left fa-2x text-success mb-3"></i><p>My family wanted a secure and peaceful environment to build our home. Baye Homes gave us not just land, but peace of mind with all the documents provided.</p><div class="text-warning mb-2">★★★★★</div><h6 class="mb-0">Mrs. Bamidele</h6><small class="text-muted">Business Owner</small></div></div>
-                <div class="swiper-slide"><div class="card p-4 shadow-sm"><i class="fas fa-quote-left fa-2x text-success mb-3"></i><p>I was looking for affordable investment opportunities in Abuja, and Baye Homes stood out. Transparent, reliable, and professional, their properties are already appreciating in value.</p><div class="text-warning mb-2">★★★★★</div><h6 class="mb-0">Emmanuel Oladele</h6><small class="text-muted">Entrepreneur</small></div></div>
-                <div class="swiper-slide"><div class="card p-4 shadow-sm"><i class="fas fa-quote-left fa-2x text-success mb-3"></i><p>I bought in Nevada Phase 1, and when Phase 2 launched, I didn't hesitate. Baye Homes keeps their word, and I can see the growth happening around the estates.</p><div class="text-warning mb-2">★★★★★</div><h6 class="mb-0">John Oluwayomi Peter</h6><small class="text-muted">Business Owner</small></div></div>
+                {% for t in testimonials %}
+                <div class="swiper-slide">
+                    <div class="card p-4 shadow-sm h-100">
+                        <i class="fas fa-quote-left fa-2x text-success mb-3"></i>
+                        <p>{{ t.message }}</p>
+                        <div class="text-warning mb-2">
+                            {% for i in range(t.rating) %}★{% endfor %}
+                            {% for i in range(5 - t.rating) %}☆{% endfor %}
+                        </div>
+                        <h6 class="mb-0">{{ t.name }}</h6>
+                        <small class="text-muted">
+                            {% if t.city and t.country %}
+                                {{ t.city }}, {{ t.country }}
+                            {% elif t.city %}
+                                {{ t.city }}
+                            {% elif t.country %}
+                                {{ t.country }}
+                            {% else %}
+                                Valued Customer
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
             <div class="swiper-pagination"></div>
         </div>

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, current_app
-from models import Property, Testimonial, BlogPost, ContactMessage
+from models import Property, Testimonial, BlogPost, ContactMessage, VisitorFeedback
 from extensions import db
 from sqlalchemy import or_
 import re
@@ -17,10 +17,19 @@ def home():
     featured_properties = Property.query.filter_by(featured=True, status='available').limit(6).all()
     testimonials = Testimonial.query.filter_by(is_published=True).order_by(db.desc(Testimonial.created_at)).limit(4).all()
     recent_posts = BlogPost.query.filter_by(is_published=True).order_by(db.desc(BlogPost.created_at)).limit(3).all()
+    # Fetch latest feedback with rating >= 4 and a non-empty message
+    testimonials = VisitorFeedback.query.filter(
+        VisitorFeedback.rating >= 4,
+        VisitorFeedback.message.isnot(None),
+        VisitorFeedback.message != ''
+    ).order_by(VisitorFeedback.created_at.desc()).limit(10).all()
+    
     return render_template('index.html', 
                            featured_properties=featured_properties,
                            testimonials=testimonials,
-                           recent_posts=recent_posts)
+                           recent_posts=recent_posts,
+                           meta_description='Baye Homes offers verified land and building options in Abuja with flexible payment plans, secure documentation, and investment advisory services.'
+                           )
 
 @public_bp.route('/about')
 def about():
