@@ -10,3 +10,4 @@ email-validator
 Pillow
 psycopg2-binary
 openpyxl
+requests
