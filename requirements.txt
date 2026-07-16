@@ -11,5 +11,5 @@ Pillow
 openpyxl
 requests
 pymysql
-mysqlclient
+mysql-connector-python
 
