@@ -50,9 +50,12 @@
 
         /* ---------- BASE ---------- */
         html { scroll-behavior: smooth; }
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         body {
             padding-top: 76px;
-            overflow-x: hidden;
         }
         main img, main video, main iframe, main table {
             max-width: 100%;
@@ -98,6 +101,23 @@
             transition: box-shadow 0.35s var(--bh-ease), padding 0.35s var(--bh-ease);
             padding-top: .85rem;
             padding-bottom: .85rem;
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-width: 100vw;
+        }
+        .navbar > .container {
+            max-width: 100%;
+            flex-wrap: nowrap;
+        }
+        .navbar-brand {
+            min-width: 0;
+            overflow: hidden;
+        }
+        .navbar-brand img {
+            max-width: 100%;
+            height: auto;
+            max-height: 30px;
         }
         .navbar.is-scrolled {
             box-shadow: 0 .5rem 1.5rem rgba(10, 42, 36, 0.08);
