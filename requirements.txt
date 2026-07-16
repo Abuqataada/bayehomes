@@ -8,6 +8,6 @@ WTForms
 python-dotenv
 email-validator
 Pillow
-psycopg2-binary
 openpyxl
 requests
+psycopg2-binary==2.9.10

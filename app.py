@@ -14,6 +14,7 @@ from blueprints.investment import investment_bp
 from blueprints.auth import auth_bp
 from blueprints.property_mgmt import property_mgmt_bp
 import dotenv
+import psycopg2   # <-- forces the driver to register
 
 dotenv.load_dotenv()
 
