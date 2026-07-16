@@ -53,25 +53,26 @@ if os.environ.get("VERCEL_ENV") != "production":
     with app.app_context():
         db.create_all()
     
-    # Create admin user
-    admin = User.query.filter_by(username=os.environ.get('ADMIN_USERNAME', 'admin')).first()
-    if not admin:
-        admin = User(
-            username=os.environ.get('ADMIN_USERNAME', 'admin'),
-            email=os.environ.get('ADMIN_EMAIL', 'admin@bayehomes.com'),
-            first_name='Admin',
-            last_name='User',
-            phone='1234567890',
-            role=UserRole.ADMIN,
-            email_verified=True,
-            is_admin=True
-        )
-        admin.set_password(os.environ.get('ADMIN_PASSWORD', 'admin123'))
-        db.session.add(admin)
-        db.session.commit()
-        print("Admin user created.")
-    else:
-        print("Admin user already exists.")
+    with app.app_context():
+        # Create admin user
+        admin = User.query.filter_by(username=os.environ.get('ADMIN_USERNAME', 'admin')).first()
+        if not admin:
+            admin = User(
+                username=os.environ.get('ADMIN_USERNAME', 'admin'),
+                email=os.environ.get('ADMIN_EMAIL', 'admin@bayehomes.com'),
+                first_name='Admin',
+                last_name='User',
+                phone='1234567890',
+                role=UserRole.ADMIN,
+                email_verified=True,
+                is_admin=True
+            )
+            admin.set_password(os.environ.get('ADMIN_PASSWORD', 'admin123'))
+            db.session.add(admin)
+            db.session.commit()
+            print("Admin user created.")
+        else:
+            print("Admin user already exists.")
 
 if __name__ == '__main__':
     app.run(debug=True)
