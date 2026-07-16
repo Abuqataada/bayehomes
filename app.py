@@ -49,8 +49,9 @@ def create_app():
 app = create_app()
         
         
-with app.app_context():
-    db.create_all()
+if os.environ.get("VERCEL_ENV") != "production":
+    with app.app_context():
+        db.create_all()
     
     # Create admin user
     admin = User.query.filter_by(username=os.environ.get('ADMIN_USERNAME', 'admin')).first()
