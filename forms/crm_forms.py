@@ -4,8 +4,13 @@ from wtforms.validators import DataRequired, Email, Length, Optional
 from models import LeadStatus, LeadSource, User
 
 class LeadFilterForm(FlaskForm):
-    status = SelectField('Status', choices=[('', 'All')] + [(s.value, s.value.replace('_', ' ').title()) for s in LeadStatus], coerce=str)
-    source = SelectField('Source', choices=[('', 'All')] + [(s.value, s.value.replace('_', ' ').title()) for s in LeadSource], coerce=str)
+    # Use LeadStatus.ALL and LeadSource.ALL to get the list of string values
+    status = SelectField('Status', 
+                         choices=[('', 'All')] + [(s, s.replace('_', ' ').title()) for s in LeadStatus.ALL], 
+                         coerce=str)
+    source = SelectField('Source', 
+                         choices=[('', 'All')] + [(s, s.replace('_', ' ').title()) for s in LeadSource.ALL], 
+                         coerce=str)
     assigned_to = SelectField('Assigned To', choices=[], coerce=str)
     search = StringField('Search', validators=[Optional()])
 

@@ -21,7 +21,8 @@ class PropertyForm(FlaskForm):
     latitude = DecimalField('Latitude', places=7, validators=[Optional()])
     longitude = DecimalField('Longitude', places=7, validators=[Optional()])
     assigned_staff_id = SelectField('Assigned Staff', choices=[], validators=[Optional()])
-    status = SelectField('Status', choices=[(s.value, s.value.replace('_', ' ').title()) for s in PropertyStatus], validators=[DataRequired()])
+    # Fix: use PropertyStatus.ALL instead of iterating over the class
+    status = SelectField('Status', choices=[(s, s.replace('_', ' ').title()) for s in PropertyStatus.ALL], validators=[DataRequired()])
     featured = BooleanField('Featured Property')
     images = FileField('Upload Images', validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Images only!')])
 
@@ -36,8 +37,10 @@ class PropertyForm(FlaskForm):
             pass  # handled in route
 
 class PropertyFilterForm(FlaskForm):
-    status = SelectField('Status', choices=[('', 'All')] + [(s.value, s.value.replace('_', ' ').title()) for s in PropertyStatus], coerce=str)
+    # Fix: use PropertyStatus.ALL
+    status = SelectField('Status', choices=[('', 'All')] + [(s, s.replace('_', ' ').title()) for s in PropertyStatus.ALL], coerce=str)
     property_type = SelectField('Type', choices=[('', 'All'), ('land', 'Land'), ('building', 'Building')])
     estate = StringField('Estate')
     search = StringField('Search')
+    
     

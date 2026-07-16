@@ -9,7 +9,10 @@ class StaffRegistrationForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=80)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=80)])
     phone = StringField('Phone', validators=[Length(max=20)])
-    department = SelectField('Department', choices=[(d.value, d.value.title()) for d in StaffDepartment], validators=[DataRequired()])
+    # Use StaffDepartment.ALL to get the list of values
+    department = SelectField('Department', 
+                             choices=[(d, d.title()) for d in StaffDepartment.ALL], 
+                             validators=[DataRequired()])
     role = StringField('Job Title', validators=[Optional(), Length(max=50)])
     reports_to = SelectField('Reports To', coerce=str, validators=[Optional()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
@@ -29,7 +32,9 @@ class StaffEditForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=80)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=80)])
     phone = StringField('Phone', validators=[Length(max=20)])
-    department = SelectField('Department', choices=[(d.value, d.value.title()) for d in StaffDepartment], validators=[DataRequired()])
+    department = SelectField('Department', 
+                             choices=[(d, d.title()) for d in StaffDepartment.ALL], 
+                             validators=[DataRequired()])
     role = StringField('Job Title', validators=[Optional(), Length(max=50)])
     reports_to = SelectField('Reports To', coerce=str, validators=[Optional()])
     is_active = BooleanField('Active', default=True)
@@ -41,6 +46,11 @@ class StaffEditForm(FlaskForm):
 
 class StaffFilterForm(FlaskForm):
     search = StringField('Search', validators=[Optional()])
-    department = SelectField('Department', choices=[('', 'All')] + [(d.value, d.value.title()) for d in StaffDepartment], validators=[Optional()])
-    is_active = SelectField('Status', choices=[('', 'All'), ('true', 'Active'), ('false', 'Inactive')], validators=[Optional()])
+    department = SelectField('Department', 
+                             choices=[('', 'All')] + [(d, d.title()) for d in StaffDepartment.ALL], 
+                             validators=[Optional()])
+    is_active = SelectField('Status', 
+                            choices=[('', 'All'), ('true', 'Active'), ('false', 'Inactive')], 
+                            validators=[Optional()])
+    
     

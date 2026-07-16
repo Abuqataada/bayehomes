@@ -3,71 +3,76 @@ from datetime import datetime, timezone
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
-import enum
+from sqlalchemy import CheckConstraint
 
 # Helper to generate UUID strings
 def generate_uuid():
     return str(uuid.uuid4())
 
-def enum_values(enum_class):
-    return [item.value for item in enum_class]
-
 # ============================
-# ENUMS
+# VALID VALUES (as constants, for reference)
 # ============================
 
-class UserRole(enum.Enum):
+class UserRole:
     ADMIN = 'admin'
     STAFF = 'staff'
     CUSTOMER = 'customer'
+    ALL = (ADMIN, STAFF, CUSTOMER)
 
-class PropertyStatus(enum.Enum):
+class PropertyStatus:
     AVAILABLE = 'available'
     RESERVED = 'reserved'
     SOLD = 'sold'
     UNDER_DEVELOPMENT = 'under_development'
+    ALL = (AVAILABLE, RESERVED, SOLD, UNDER_DEVELOPMENT)
 
-class LeadStatus(enum.Enum):
+class LeadStatus:
     NEW = 'new'
     CONTACTED = 'contacted'
     FOLLOW_UP = 'follow_up'
     NEGOTIATION = 'negotiation'
     CONVERTED = 'converted'
     CLOSED = 'closed'
+    ALL = (NEW, CONTACTED, FOLLOW_UP, NEGOTIATION, CONVERTED, CLOSED)
 
-class LeadSource(enum.Enum):
+class LeadSource:
     WEBSITE_CONTACT = 'website_contact'
     PROPERTY_INQUIRY = 'property_inquiry'
     WHATSAPP = 'whatsapp'
     INVESTMENT_REQUEST = 'investment_request'
+    ALL = (WEBSITE_CONTACT, PROPERTY_INQUIRY, WHATSAPP, INVESTMENT_REQUEST)
 
-class PaymentStatus(enum.Enum):
+class PaymentStatus:
     PENDING = 'pending'
     VERIFIED = 'verified'
     FAILED = 'failed'
+    ALL = (PENDING, VERIFIED, FAILED)
 
-class InvestmentStatus(enum.Enum):
+class InvestmentStatus:
     ACTIVE = 'active'
     COMPLETED = 'completed'
     DEFAULTED = 'defaulted'
+    ALL = (ACTIVE, COMPLETED, DEFAULTED)
 
-class StaffDepartment(enum.Enum):
+class StaffDepartment:
     SALES = 'sales'
     MARKETING = 'marketing'
     OPERATIONS = 'operations'
     ADMIN = 'administration'
     LEGAL = 'legal'
+    ALL = (SALES, MARKETING, OPERATIONS, ADMIN, LEGAL)
 
-class DocumentType(enum.Enum):
+class DocumentType:
     DEED = 'deed'
     SURVEY = 'survey'
     BUILDING_PLAN = 'building_plan'
     PERMIT = 'permit'
     RECEIPT = 'receipt'
     OTHER = 'other'
+    ALL = (DEED, SURVEY, BUILDING_PLAN, PERMIT, RECEIPT, OTHER)
 
 # ============================
-# USER (merged with your existing User)
+# USER
 # ============================
 
 class User(UserMixin, db.Model):
@@ -80,7 +85,7 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
     phone = db.Column(db.String(20))
-    role = db.Column(db.Enum(UserRole, values_callable=enum_values), default=UserRole.CUSTOMER)
+    role = db.Column(db.String(20), default='customer')  # values: admin, staff, customer
     is_admin = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     email_verified = db.Column(db.Boolean, default=False)
@@ -89,16 +94,20 @@ class User(UserMixin, db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
-    # Relationships (with explicit foreign_keys where multiple paths exist)
+    # Relationships
     profile = db.relationship('Profile', backref='user', uselist=False)
     saved_properties = db.relationship('SavedProperty', backref='customer', lazy='dynamic')
     property_inquiries = db.relationship('PropertyInquiry', backref='customer', lazy='dynamic')
     sales = db.relationship('Sale', foreign_keys='Sale.customer_id', backref='customer', lazy='dynamic')
     leads_assigned = db.relationship('Lead', foreign_keys='Lead.assigned_to', backref='staff_user')
     investments = db.relationship('Investment', foreign_keys='Investment.investor_id', backref='investor', lazy='dynamic')
-    # Critical fix: specify which foreign key to use for staff_profile
     staff_profile = db.relationship('StaffProfile', foreign_keys='StaffProfile.user_id', backref='user', uselist=False)
     activity_logs = db.relationship('ActivityLog', backref='user', lazy='dynamic')
+
+    # Constraints
+    __table_args__ = (
+        CheckConstraint(role.in_(UserRole.ALL), name='check_user_role'),
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -114,13 +123,13 @@ class User(UserMixin, db.Model):
 
     def is_staff_user(self):
         return self.role in (UserRole.ADMIN, UserRole.STAFF)
-    
+
     def is_customer(self):
         return self.role == UserRole.CUSTOMER
 
     def __repr__(self):
         return f'<User {self.email}>'
-       
+
 
 class Profile(db.Model):
     __tablename__ = 'profiles'
@@ -135,7 +144,7 @@ class Profile(db.Model):
 
 
 # ============================
-# STAFF 
+# STAFF (legacy, kept for compatibility)
 # ============================
 
 class Staff(db.Model):
@@ -167,7 +176,7 @@ class Staff(db.Model):
 
 
 # ============================
-# PROPERTIES (enhanced with estate, plot, etc.)
+# PROPERTIES
 # ============================
 
 class Property(db.Model):
@@ -176,18 +185,18 @@ class Property(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     title = db.Column(db.String(200), nullable=False)
     slug = db.Column(db.String(200), unique=True, nullable=False, index=True)
-    property_type = db.Column(db.Enum('land', 'building'), nullable=False)
+    property_type = db.Column(db.String(20), nullable=False)  # 'land' or 'building'
     estate = db.Column(db.String(100))
     plot_number = db.Column(db.String(50))
-    size_sqm = db.Column(db.Numeric(10,2))
-    price = db.Column(db.Numeric(15,2), nullable=False)
+    size_sqm = db.Column(db.Numeric(10, 2))
+    price = db.Column(db.Numeric(15, 2), nullable=False)
     description = db.Column(db.Text)
     location = db.Column(db.String(255), nullable=False)
     city = db.Column(db.String(100), default='Abuja')
     state = db.Column(db.String(100), default='FCT')
     bedrooms = db.Column(db.Integer)
     bathrooms = db.Column(db.Integer)
-    status = db.Column(db.Enum(PropertyStatus, values_callable=enum_values), default=PropertyStatus.AVAILABLE)
+    status = db.Column(db.String(20), default='available')  # available, reserved, sold, under_development
     images = db.Column(db.JSON)
     documents = db.Column(db.JSON)
     featured = db.Column(db.Boolean, default=False)
@@ -202,6 +211,12 @@ class Property(db.Model):
     sales = db.relationship('Sale', backref='property', lazy='dynamic')
     investments = db.relationship('Investment', backref='property', lazy='dynamic')
     assigned_staff = db.relationship('User', foreign_keys=[assigned_staff_id], backref='managed_properties')
+
+    # Constraints
+    __table_args__ = (
+        CheckConstraint(property_type.in_(('land', 'building')), name='check_property_type'),
+        CheckConstraint(status.in_(PropertyStatus.ALL), name='check_property_status'),
+    )
 
     def get_primary_image(self):
         return self.images[0] if self.images else 'placeholder.jpg'
@@ -228,12 +243,16 @@ class PropertyInquiry(db.Model):
     user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     property_id = db.Column(db.String(36), db.ForeignKey('properties.id'), nullable=False)
     message = db.Column(db.Text)
-    status = db.Column(db.Enum('pending', 'responded', 'closed'), default='pending')
+    status = db.Column(db.String(20), default='pending')  # pending, responded, closed
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+
+    __table_args__ = (
+        CheckConstraint(status.in_(('pending', 'responded', 'closed')), name='check_inquiry_status'),
+    )
 
 
 # ============================
-# TESTIMONIALS (unchanged)
+# TESTIMONIALS
 # ============================
 
 class Testimonial(db.Model):
@@ -249,7 +268,7 @@ class Testimonial(db.Model):
 
 
 # ============================
-# BLOG POSTS (unchanged)
+# BLOG POSTS
 # ============================
 
 class BlogPost(db.Model):
@@ -269,7 +288,7 @@ class BlogPost(db.Model):
 
 
 # ============================
-# CONTACT MESSAGES (unchanged)
+# CONTACT MESSAGES
 # ============================
 
 class ContactMessage(db.Model):
@@ -285,7 +304,7 @@ class ContactMessage(db.Model):
 
 
 # ============================
-# LEADS & CRM (new)
+# LEADS & CRM
 # ============================
 
 class Lead(db.Model):
@@ -295,8 +314,8 @@ class Lead(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120))
     phone = db.Column(db.String(20))
-    source = db.Column(db.Enum(LeadSource, values_callable=enum_values), default=LeadSource.WEBSITE_CONTACT)
-    status = db.Column(db.Enum(LeadStatus, values_callable=enum_values), default=LeadStatus.NEW)
+    source = db.Column(db.String(30), default='website_contact')
+    status = db.Column(db.String(30), default='new')
     message = db.Column(db.Text)
     assigned_to = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=True)
     converted_to_customer = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=True)
@@ -307,6 +326,11 @@ class Lead(db.Model):
     notes = db.relationship('LeadNote', backref='lead', lazy='dynamic')
     reminders = db.relationship('FollowUpReminder', backref='lead', lazy='dynamic')
     converted_customer = db.relationship('User', foreign_keys=[converted_to_customer], backref='converted_leads')
+
+    __table_args__ = (
+        CheckConstraint(source.in_(LeadSource.ALL), name='check_lead_source'),
+        CheckConstraint(status.in_(LeadStatus.ALL), name='check_lead_status'),
+    )
 
 
 class LeadNote(db.Model):
@@ -331,7 +355,7 @@ class FollowUpReminder(db.Model):
 
 
 # ============================
-# SALES & PAYMENTS (new)
+# SALES & PAYMENTS
 # ============================
 
 class Sale(db.Model):
@@ -341,11 +365,11 @@ class Sale(db.Model):
     customer_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     property_id = db.Column(db.String(36), db.ForeignKey('properties.id'), nullable=False)
     staff_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=True)
-    total_amount = db.Column(db.Numeric(15,2), nullable=False)
-    amount_paid = db.Column(db.Numeric(15,2), default=0)
-    balance = db.Column(db.Numeric(15,2))
+    total_amount = db.Column(db.Numeric(15, 2), nullable=False)
+    amount_paid = db.Column(db.Numeric(15, 2), default=0)
+    balance = db.Column(db.Numeric(15, 2))
     sale_date = db.Column(db.DateTime, default=datetime.now(timezone.utc))
-    status = db.Column(db.Enum('pending', 'completed', 'defaulted'), default='pending')
+    status = db.Column(db.String(20), default='pending')  # pending, completed, defaulted
     is_installment = db.Column(db.Boolean, default=False)
     installment_plan = db.Column(db.JSON)
 
@@ -355,19 +379,28 @@ class Sale(db.Model):
     invoices = db.relationship('Invoice', backref='sale', lazy='dynamic')
     documents = db.relationship('Document', backref='sale', lazy='dynamic')
 
+    __table_args__ = (
+        CheckConstraint(status.in_(('pending', 'completed', 'defaulted')), name='check_sale_status'),
+    )
+
 
 class Payment(db.Model):
     __tablename__ = 'payments'
 
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     sale_id = db.Column(db.String(36), db.ForeignKey('sales.id'), nullable=False)
-    amount = db.Column(db.Numeric(15,2), nullable=False)
+    amount = db.Column(db.Numeric(15, 2), nullable=False)
     payment_date = db.Column(db.DateTime, default=datetime.now(timezone.utc))
-    method = db.Column(db.Enum('cash', 'transfer', 'card'), nullable=False)
+    method = db.Column(db.String(20), nullable=False)  # cash, transfer, card
     reference = db.Column(db.String(100))
-    status = db.Column(db.Enum(PaymentStatus, values_callable=enum_values), default=PaymentStatus.PENDING)
+    status = db.Column(db.String(20), default='pending')  # pending, verified, failed
     verified_by = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=True)
     verified_at = db.Column(db.DateTime)
+
+    __table_args__ = (
+        CheckConstraint(method.in_(('cash', 'transfer', 'card')), name='check_payment_method'),
+        CheckConstraint(status.in_(PaymentStatus.ALL), name='check_payment_status'),
+    )
 
 
 class Receipt(db.Model):
@@ -388,13 +421,17 @@ class Invoice(db.Model):
     invoice_number = db.Column(db.String(50), unique=True, nullable=False)
     issued_date = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     due_date = db.Column(db.DateTime)
-    total = db.Column(db.Numeric(15,2), nullable=False)
-    balance_due = db.Column(db.Numeric(15,2))
-    status = db.Column(db.Enum('unpaid', 'paid', 'overdue'), default='unpaid')
+    total = db.Column(db.Numeric(15, 2), nullable=False)
+    balance_due = db.Column(db.Numeric(15, 2))
+    status = db.Column(db.String(20), default='unpaid')  # unpaid, paid, overdue
+
+    __table_args__ = (
+        CheckConstraint(status.in_(('unpaid', 'paid', 'overdue')), name='check_invoice_status'),
+    )
 
 
 # ============================
-# INVESTMENT MANAGEMENT (new)
+# INVESTMENT MANAGEMENT
 # ============================
 
 class InvestmentPackage(db.Model):
@@ -403,9 +440,9 @@ class InvestmentPackage(db.Model):
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
-    min_amount = db.Column(db.Numeric(15,2), nullable=False)
-    max_amount = db.Column(db.Numeric(15,2))
-    expected_roi = db.Column(db.Numeric(5,2))
+    min_amount = db.Column(db.Numeric(15, 2), nullable=False)
+    max_amount = db.Column(db.Numeric(15, 2))
+    expected_roi = db.Column(db.Numeric(5, 2))
     duration_months = db.Column(db.Integer)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
@@ -418,15 +455,20 @@ class Investment(db.Model):
     investor_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     property_id = db.Column(db.String(36), db.ForeignKey('properties.id'), nullable=True)
     package_id = db.Column(db.String(36), db.ForeignKey('investment_packages.id'), nullable=True)
-    amount = db.Column(db.Numeric(15,2), nullable=False)
+    amount = db.Column(db.Numeric(15, 2), nullable=False)
     start_date = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     end_date = db.Column(db.DateTime)
-    roi_earned = db.Column(db.Numeric(15,2), default=0)
-    status = db.Column(db.Enum(InvestmentStatus, values_callable=enum_values), default=InvestmentStatus.ACTIVE)
+    roi_earned = db.Column(db.Numeric(15, 2), default=0)
+    status = db.Column(db.String(20), default='active')  # active, completed, defaulted
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
+    # Relationships
     roi_transactions = db.relationship('ROITransaction', backref='investment', lazy='dynamic')
+
+    __table_args__ = (
+        CheckConstraint(status.in_(InvestmentStatus.ALL), name='check_investment_status'),
+    )
 
 
 class ROITransaction(db.Model):
@@ -434,13 +476,13 @@ class ROITransaction(db.Model):
 
     id = db.Column(db.String(36), primary_key=True, default=generate_uuid)
     investment_id = db.Column(db.String(36), db.ForeignKey('investments.id'), nullable=False)
-    amount = db.Column(db.Numeric(15,2), nullable=False)
+    amount = db.Column(db.Numeric(15, 2), nullable=False)
     date = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     note = db.Column(db.Text)
 
 
 # ============================
-# STAFF MANAGEMENT (new)
+# STAFF MANAGEMENT
 # ============================
 
 class StaffProfile(db.Model):
@@ -448,7 +490,7 @@ class StaffProfile(db.Model):
 
     user_id = db.Column(db.String(36), db.ForeignKey('users.id'), primary_key=True)
     staff_id = db.Column(db.String(20), unique=True)
-    department = db.Column(db.Enum(StaffDepartment, values_callable=enum_values), default=StaffDepartment.SALES)
+    department = db.Column(db.String(30), default='sales')
     role = db.Column(db.String(50))
     hire_date = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     phone_extension = db.Column(db.String(10))
@@ -456,6 +498,10 @@ class StaffProfile(db.Model):
 
     # Self reference for hierarchy
     subordinates = db.relationship('User', foreign_keys=[reports_to], remote_side='User.id')
+
+    __table_args__ = (
+        CheckConstraint(department.in_(StaffDepartment.ALL), name='check_staff_department'),
+    )
 
 
 class ActivityLog(db.Model):
@@ -497,6 +543,7 @@ class StaffDevice(db.Model):
 
     def __repr__(self):
         return f'<StaffDevice device_id={self.device_id}>'
+
 
 class StaffAttendanceRecord(db.Model):
     __tablename__ = 'staff_attendance_records'
@@ -571,7 +618,7 @@ class StaffNotificationRead(db.Model):
 
 
 # ============================
-# DOCUMENTS (new)
+# DOCUMENTS
 # ============================
 
 class Document(db.Model):
@@ -581,7 +628,12 @@ class Document(db.Model):
     sale_id = db.Column(db.String(36), db.ForeignKey('sales.id'), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     file_path = db.Column(db.String(255), nullable=False)
-    document_type = db.Column(db.Enum(DocumentType, values_callable=enum_values), default=DocumentType.OTHER)
+    document_type = db.Column(db.String(30), default='other')
     uploaded_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     uploaded_by = db.Column(db.String(36), db.ForeignKey('users.id'))
+
+    __table_args__ = (
+        CheckConstraint(document_type.in_(DocumentType.ALL), name='check_document_type'),
+    )
+    
     
